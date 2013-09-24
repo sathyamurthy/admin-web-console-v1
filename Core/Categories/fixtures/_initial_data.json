@@ -1,0 +1,59 @@
+ [
+        {
+	        "pk": 1, 
+	        "model": "Categories.Categories", 
+			"fields": {
+		      "category_name": "All Categories", 
+		      "is_system_folder": true, 
+		      "level": 0, 
+		      "lft": 1,"modified": "2013-08-01T07:26:41", 
+		      "owner": 0, 
+		      "rght": 22, 
+		      "tree_id": 1
+	    	}
+	    }, 
+        {
+	        "pk": 2, 
+	        "model": "Categories.Categories", 
+			"fields": {
+		      "category_name": "Main Catalogue", 
+		      "is_system_folder": true, 
+		      "level": 1, 
+		      "lft": 2, 
+		      "modified": "2013-08-01T07:26:41", 
+		      "owner": 0, 
+		      "rght": 5, 
+		      "tree_id": 1
+	    	}
+	    }, 	    
+        {
+	        "pk": 3, 
+	        "model": "Categories.Categories", 
+			"fields": {
+		      "category_name": "All Brouchers", 
+		      "is_system_folder": true, 
+		      "level": 1, 
+		      "lft": 6, 
+		      "modified": "2013-08-01T07:26:59", 
+		      "owner": 0, 
+		      "rght": 21, 
+		      "tree_id": 1
+	    	}
+	    }, 	 
+        {
+	        "pk": 4, 
+	        "model": "Categories.Categories", 
+			"fields": {
+		      "category_name": "Kitchen", 
+		      "is_system_folder": true, 
+		      "level": 2, 
+		      "lft": 7, 
+		      "modified": "2013-08-01T07:28:08", 
+		      "owner": 0, 
+		      "rght": 10, 
+		      "tree_id": 1	
+		    }
+	    } 	       
+    
+
+ ]

@@ -1,0 +1,67 @@
+{% block content %}
+
+<div class="images-gallery">
+	
+</div>
+<br clear="all">
+<script language="javascript">
+		
+	{% if object_id %}
+
+		function getFilesList(){
+			ID = {{object_id}}
+			$('.images-gallery').html('');
+				notification('info','Getting files')
+				$.ajax({
+	            	type:'GET',
+	            	url: '/api/v1/files/list/?limit=0&nocache=true&gid='+ID,
+	            	data: '',
+	            	success: function(data, status) {
+	            		
+	            		$('.images-gallery').html('');
+	            		$('.images-gallery').append('<div class="row-fluid">');
+	            		var i=0;
+						for(items in data.files){
+							//console.log(data.extended_content[items])
+							//alert(data.edit == true)
+							//console.log(data.edit)
+							
+							if(i%5 == 0){
+								$('.images-gallery').append('</div><div class="row-fluid">')
+							}
+							i++;
+							if(data.edit == true){
+								$('.images-gallery').append("<div class='span2'><b>"+data.files[items].properties['name']+"</b><p><img name='"+data.files[items].name.replace(data.files[items].extension,'')+"' path='"+data.files[items].relative_path+"' src='"+data.files[items].properties['thumbnail']+"' /><label><input class='file-delete-checkbox' name='"+data.files[items].properties['name']+"' type='checkbox' style='margin-top:-3px' id='"+data.files[items].id+"' ></input> Delete</label></p></div>");
+							}
+							else
+								$('.images-gallery').append("<div class='span2'><b>"+data.files[items].properties['name']+"</b><p><img name='"+data.files[items].name.replace(data.files[items].extension,'')+"' path='"+data.files[items].relative_path+"' src='"+data.files[items].properties['thumbnail']+"' /></p></div>");
+						}
+						$('.images-gallery').append('</div>')
+						if(i==0){
+							$("#deselect_all_files").attr("disabled", "disabled");
+							$("#select_all_files").attr("disabled", "disabled");
+							$("#delete_files").attr("disabled", "disabled");
+						}
+						else{
+							$("#deselect_all_files").removeAttr("disabled");
+							$("#select_all_files").removeAttr("disabled");
+							$("#delete_files").removeAttr("disabled");
+						}
+						//console.log($('.image-table tbody').html())
+	            	},
+	            	error:function(data, status) {
+	            		console.log(data)
+	            	}
+	        	});
+
+		}								
+	    $( document ).ready(function() {
+
+	    	getFilesList()
+		});
+		{% endif %}
+</script>
+
+{% endblock %}
+
+

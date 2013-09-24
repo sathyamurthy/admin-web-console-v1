@@ -1,0 +1,115 @@
+{% extends "base_templates/base_site.html" %}
+{% load i18n bootstrapped_goodies_tags %}
+{% load url from future %}
+
+{% block extrastyle %}
+<link  href="/static/base/css/jqGrid.bootstrap.css" rel="stylesheet"/>
+{% endblock %}
+{% block content %}
+<script src="/static/base/js/pure.js"></script>
+
+<div class="container-fluid">
+	<div class="row-fluid">
+		<!-- LEFT TAB -->
+				<div id="resizable" class="span2">
+					<div class="row">
+						{% render_with_template_if_exist "base_templates/Groups/groups_list.html" "upload" %}
+					</div>
+			
+				</div>
+				<!-- LEFT TAB -->
+
+				<!-- RIGHT VIEW -->
+				<div class="span10 right-view-wrp">
+					<div class="notifications top-center" id="alert-notification"></div>
+					{% block breadcrumbs %}
+					<ul class="breadcrumb row-fluid ">
+						<li>
+							<a href="{{home_url}}">{% trans 'Home' %}</a><span class="divider">/</span> 
+						</li>
+						{% if modules.selected.0 %}
+							<li>
+								<a href="{{modules.selected.0.url}}">{{modules.selected.0.name}}</a><span class="divider">/</span> 
+							</li>
+						{% endif %}
+
+						
+					</ul>
+					<div class="well span8">
+							
+						<form class="form-signin form-horizontal" action="{{ app_path }}" method="post" id="login-form">{% csrf_token %}
+						  <div class="control-group">
+						  	<div class="controls">
+								{{saved}}
+							</div>
+						  </div>
+						  <div class="control-group">
+						    <div class="control-label">
+						        <label for="id_username" class="required">{% trans 'Username:' %}</label> 
+						    </div>
+						    <div class="controls">
+						        {{ form.username }}
+						        {% if not form.this_is_the_login_form.errors %}<span class="help-inline">{{ form.username.errors|striptags }}</span>{% endif %}
+						    </div>
+						  </div>
+						  <div class="control-group">
+						    <div class="control-label">
+						        <label for="id_first_name" class="required">{% trans 'First name:' %}</label> 
+						    </div>
+						    <div class="controls">
+						        {{ form.first_name }}
+						        {% if not form.this_is_the_login_form.errors %}<span class="help-inline">{{ form.first_name.errors|striptags }}</span>{% endif %}
+						    </div>
+						  </div>
+						  <div class="control-group">
+						    <div class="control-label">
+						        <label for="id_last_name" class="required">{% trans 'Last name:' %}</label> 
+						    </div>
+						    <div class="controls">
+						        {{ form.last_name }}
+						        {% if not form.this_is_the_login_form.errors %}<span class="help-inline">{{ form.last_name.errors|striptags }}</span>{% endif %}
+						    </div>
+						  </div>
+						  <div class="control-group">
+						    <div class="control-label">
+						        <label for="id_email" class="required">{% trans 'Email:' %}</label> 
+						    </div>
+						    <div class="controls">
+						        {{ form.email }}
+						        {% if not form.this_is_the_login_form.errors %}<span class="help-inline">{{ form.email.errors|striptags }}</span>{% endif %}
+						    </div>
+						  </div>
+						  <div class="control-group">
+						    <div class="control-label">
+						        <label for="id_password" class="required">{% trans 'Current password:' %}</label> 
+						    </div>
+						    <div class="controls">
+						        {{ form.password }}
+						        {% if not form.this_is_the_login_form.password %}<span class="help-inline">{{ form.password.errors|striptags }}</span>{% endif %}
+						    </div>
+						  </div>
+						  {%if not profile.groups.is_system_group %}
+							  <div class="control-group">
+							    <div class="control-label">
+							        <label for="" class="required">{% trans 'Group:' %}</label> 
+							    </div>
+							    <div class="controls">
+							    	<label style="padding-top:5px" class="required">{{profile.groups.group_name}}</label> 
+							    </div>
+							  </div>
+						  {% endif %}
+						  <div class="form-actions">
+						    <input type="submit" value="{% trans 'Save' %}" class="btn btn-primary pull-right" />
+						  </div>
+
+						</form>
+					</div>
+					{% endblock %}
+				</div>
+				<!-- RIGHT VIEW -->
+
+			</div>
+{% endblock %}
+
+{% block sidebar %}{% endblock %}
+

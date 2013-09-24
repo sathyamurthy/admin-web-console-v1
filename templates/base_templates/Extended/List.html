@@ -1,0 +1,134 @@
+{% extends "base_templates/index.html" %}
+{% load i18n bootstrapped_goodies_tags %}
+{% load url from future %}
+
+{% block content %}
+
+
+<div class="container-fluid">
+	<div class="row-fluid">
+		<!-- LEFT TAB -->
+		<div id="resizable" class="span2 ec-tabs">
+			Left content
+				</div>
+				<!-- LEFT TAB -->
+
+				<!-- RIGHT VIEW -->
+				<div class="span10 right-view-wrp">
+					<div class="notifications top-center" id="alert-notification"></div>
+					{% block breadcrumbs %}
+					<ul class="breadcrumb row-fluid ">
+						<li>
+							<a href="{{home_url}}">{% trans 'Home' %}</a><span class="divider">/</span> 
+						</li>
+						{% if modules.selected.0 %}
+							<li>
+								<a href="{{modules.selected.0.url}}">{{modules.selected.0.name}}</a><span class="divider">/</span> 
+							</li>
+						{% endif %}
+
+						
+					</ul>
+					{% endblock %}					
+					<div class="span12">
+						<div class="bs-docs" style="background-color: #D4D4D4;">
+							<table class="table table-hover">
+					              <thead>
+					                <tr>
+					                  <th>Gallery Id</th>
+					                  <th>Gallery name</th>
+					                  <th>Gallery Type</th>
+					                </tr>
+					              </thead>
+					              <tbody>
+					              </tbody>
+					            </table>
+						</div>
+						<script language="javascript">
+								function editGallery(id){
+									document.location.href = '{{home_url}}Assets/Extended/Edit/' +id+'/';
+								}
+								function viewGallery(id){
+									document.location.href = '{{home_url}}Assets/Extended/List/' +id+'/';
+								}
+								
+								var o = {};
+								function getGalleryPresetName(list,id)
+								{
+									name = "[[ Not defined]]"
+									try{
+										name = list[id];
+									}
+									catch(e){}
+									return name;
+									
+								}
+								function getGalleryPreset(){
+							    	
+							    	$.ajax({
+							            	type:'GET',
+							            	url: '/api/v1/gallerypreset/list/?limit=0',
+							            	data: '',
+							            	success: function(data, status) {
+							            		$('#errors').html('')
+							            		if(data.gallery_preset[0] !== undefined)
+							            		{
+							            			for(key in data.gallery_preset){
+							            				o[data.gallery_preset[key].id] = data.gallery_preset[key].name;
+							            			}	
+							            				getGalleryList(o)
+												}
+							            	},
+							            	error:function(data, status) {
+							            		if(data.status == 400)
+							            		{
+							            			$('#errors').html()
+							            			$('#errors').html(data.responseJSON.error)
+							            		}
+							            		if(data.status == 500)
+							            		{
+							            			$('#errors').html()
+							            			$('#errors').html(data.responseJSON.error)
+							            		}
+							            	}
+							        	});									
+								}
+								function getGalleryList(galleryPreset){
+										$.ajax({
+							            	type:'GET',
+							            	url: '/api/v1/extended/list/',
+							            	data: '',
+							            	success: function(data, status) {
+							            		//debugger;
+							            		$('.table tbody').html('');
+												for(items in data.extended_content){
+													//console.log(data.extended_content[item])
+													//alert(data.edit == true)
+													if(data.edit == true)
+														$('.table tbody').append("<tr style='cursor: pointer;' onclick='editGallery("+data.extended_content[items].id+")'><td>"+data.extended_content[items].gallery_id+"</td><td>"+data.extended_content[items].name+"</td><td>"+getGalleryPresetName(galleryPreset,data.extended_content[items].preset)+"</td></tr>");
+													else
+														$('.table tbody').append("<tr style='cursor: pointer;' onclick='viewGallery("+data.extended_content[items].id+")'><td>"+data.extended_content[items].gallery_id+"</td><td>"+data.extended_content[items].name+"</td><td>"+getGalleryPresetName(galleryPreset,data.extended_content[items].preset)+"</td></tr>");
+												}
+							            	},
+							            	error:function(data, status) {
+							            		console.log(data)
+							            	}
+							        	});
+
+								}								
+							    $( document ).ready(function() {
+
+							    	getGalleryPreset()
+								});
+						</script>
+												
+					</div>
+					</div>
+				</div>
+				<!-- RIGHT VIEW -->
+
+			</div>
+{% endblock %}
+
+{% block sidebar %}{% endblock %}
+

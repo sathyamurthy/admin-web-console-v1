@@ -1,0 +1,436 @@
+[
+    {
+        "pk": 1, 
+        "model": "Assets.ExtentedType", 
+        "fields": {
+            "name": "Gallery"
+        }
+    },
+    {
+        "pk": 2, 
+        "model": "Assets.ExtentedType", 
+        "fields": {
+            "name": "Embedded extended content"
+        }
+    },
+    {
+        "pk": 1, 
+        "model": "Assets.Properties", 
+        "fields": {
+            "name": "type",
+ 	    "ptype": "select",
+            "friendly_name":"Type",
+	    "value" : "[{\"name\":\"Normal\",\"value\":\"normal\"},{\"name\":\"Split\",\"value\":\"split\"},{\"name\":\"Overlap\",\"value\":\"overlap\"},{\"name\":\"Hotspot\",\"value\":\"hotspot\"}]"
+        }
+    },
+    {
+        "pk": 2, 
+        "model": "Assets.Properties", 
+        "fields": {
+            "name": "bg_image",
+ 	    "ptype": "text",
+            "friendly_name":"Background image",
+	    "value" : "\"\""
+        }
+    },
+    {
+        "pk": 3, 
+        "model": "Assets.Properties", 
+        "fields": {
+            "name": "fg_image",
+ 	    "ptype": "text",
+            "friendly_name":"Foreground image",
+	    "value" : "\"\""
+        }
+    },
+    {
+        "pk": 4, 
+        "model": "Assets.Properties", 
+        "fields": {
+            "name": "frame",
+ 	    "ptype": "text",
+            "friendly_name":"Original frame",
+	    "value" : "\"\""
+        }
+    },
+    {
+        "pk": 5, 
+        "model": "Assets.Properties", 
+        "fields": {
+            "name": "virtual_frame",
+ 	    "ptype": "text",
+            "friendly_name":"Virtual frame",
+	    "value" : "\"\""
+        }
+    },
+    {
+        "pk": 6, 
+        "model": "Assets.Properties", 
+        "fields": {
+            "name": "initial_transition",
+ 	    "ptype": "select",
+            "friendly_name":"Initial transition",
+	    "value" : "[{\"name\":\"From left\",\"value\":\"from_left\"},{\"name\":\"From right\",\"value\":\"from_right\"},{\"name\":\"From top\",\"value\":\"from_top\"},{\"name\":\"From bottom\",\"value\":\"from_bottom\"},{\"name\":\"Fade in\",\"value\":\"fade_in\"},{\"name\":\"None\",\"value\":\"none\"}]"
+        }
+    },
+    {
+        "pk": 7, 
+        "model": "Assets.Properties", 
+        "fields": {
+            "name": "supported_orientation",
+            "friendly_name": "Supported orientation",
+ 	    "ptype": "select",
+	    "value" : "[{\"name\":\"Both\",\"value\":\"both\"},{\"name\":\"Landsacpe\",\"value\":\"landscape\"},{\"name\":\"Portroid\",\"value\":\"portroid\"}]"
+        }
+    },
+    {
+        "pk": 8, 
+        "model": "Assets.Properties", 
+        "fields": {
+            "name": "enable_shake_detection",
+            "friendly_name": "Enable shake detection",
+ 	    "ptype": "check",
+	    "value" : "[{\"name\":\"True\",\"value\":\"true\"},{\"name\":\"False\",\"value\":\"false\"}]"
+        }
+    },
+
+
+
+    {
+        "pk": 100, 
+        "model": "Assets.Properties", 
+        "fields": {
+            "name": "scale_mode",
+            "friendly_name": "Scale mode",
+ 	    "ptype": "text",
+	    "group" : "gallery",
+	    "value" : "\"auto\""
+        }
+    },
+    {
+        "pk": 101, 
+        "model": "Assets.Properties", 
+        "fields": {
+            "name": "interval",
+            "friendly_name": "Interval",
+ 	    "ptype": "text",
+	    "group" : "gallery",
+	    "value" : "\"300\""
+        }
+    },
+    {
+        "pk": 102, 
+        "model": "Assets.Properties", 
+        "fields": {
+            "name": "mode",
+            "friendly_name": "Mode",
+ 	    "ptype": "check",
+	    "group" : "gallery",
+	    "value" : "[{\"name\":\"Vertical\",\"value\":\"vertical\"},{\"name\":\"HoriZontal\",\"value\":\"horizontal\"}]"
+        }
+    },
+    {
+
+        "pk": 103, 
+        "model": "Assets.Properties", 
+        "fields": {
+            "name": "enable_swipe",
+            "friendly_name": "Enable swipe",
+ 	    "ptype": "check",
+	    "group" : "gallery",
+	    "value" : "[{\"name\":\"True\",\"value\":\"true\"},{\"name\":\"False\",\"value\":\"false\"}]"
+        }
+    },
+    {
+        "pk": 104, 
+        "model": "Assets.Properties", 
+        "fields": {
+            "name": "allowed_swipe_direction",
+            "friendly_name": "Allowed swipe direction",
+ 	    "ptype": "select",
+	    "group" : "gallery",
+	    "value" : "[{\"name\":\"Both\",\"value\":\"both\"},{\"name\":\"Right\",\"value\":\"right\"},{\"name\":\"Left\",\"value\":\"left\"}]"
+        }
+    },
+    {
+        "pk": 105, 
+        "model": "Assets.Properties", 
+        "fields": {
+            "name": "enable_carousel",
+            "friendly_name": "Enable carousel",
+ 	    "ptype": "check",
+	    "group" : "gallery",
+	    "value" : "[{\"name\":\"True\",\"value\":\"true\"},{\"name\":\"False\",\"value\":\"false\"}]"
+        }
+    },
+    {
+        "pk": 106, 
+        "model": "Assets.Properties", 
+        "fields": {
+            "name": "enable_navigation_buttons",
+            "friendly_name": "Enable navigation buttons",
+ 	    "ptype": "check",
+	    "group" : "gallery",
+	    "value" : "[{\"name\":\"True\",\"value\":\"true\"},{\"name\":\"False\",\"value\":\"false\"}]"
+        }
+    },
+    {
+        "pk": 107, 
+        "model": "Assets.Properties", 
+        "fields": {
+            "name": "navigation_button_position",
+            "friendly_name": "Navigation button position",
+ 	    "ptype": "select",
+	    "group" : "gallery",
+	    "value" : "[{\"name\":\"Top\",\"value\":\"top\"},{\"name\":\"Bottom\",\"value\":\"bottom\"},{\"name\":\"Middle\",\"value\":\"middle\"},{\"name\":\"Left\",\"value\":\"left\"},{\"name\":\"Right\",\"value\":\"right\"},{\"name\":\"Center\",\"value\":\"center\"}]"
+        }
+    },
+    {
+        "pk": 108, 
+        "model": "Assets.Properties", 
+        "fields": {
+            "name": "transition_effect",
+            "friendly_name": "Transition effect",
+ 	    "ptype": "select",
+	    "group" : "gallery",
+	    "value" : "[{\"name\":\"None\",\"value\":\"none\"},{\"name\":\"Slide out current\",\"value\":\"slide_out_current\"},{\"name\":\"Free scroll\",\"value\":\"free_scroll\"},{\"name\":\"slide out and slide in\",\"value\":\"slide_out_and_slide_in\"}]"
+        }
+    },
+
+    {
+        "pk": 109, 
+        "model": "Assets.Properties", 
+        "fields": {
+            "name": "enable_view_mask",
+            "friendly_name": "Enable view mask",
+ 	    "ptype": "check",
+	    "group" : "gallery",
+	    "value" : "[{\"name\":\"True\",\"value\":\"true\"},{\"name\":\"False\",\"value\":\"false\"}]"
+        }
+    },
+    {
+        "pk": 110, 
+        "model": "Assets.Properties", 
+        "fields": {
+            "name": "mask_transparency",
+            "friendly_name": "Mask transparency",
+ 	    "ptype": "text",
+	    "group" : "gallery",
+	    "value" : "\"0.5\""
+        }
+    },
+    {
+        "pk": 111, 
+        "model": "Assets.Properties", 
+        "fields": {
+            "name": "enable_item_indicator",
+            "friendly_name": "Enable item indicator",
+ 	    "ptype": "check",
+	    "group" : "gallery",
+	    "value" : "[{\"name\":\"True\",\"value\":\"true\"},{\"name\":\"False\",\"value\":\"false\"}]"
+        }
+    },
+    {
+        "pk": 112, 
+        "model": "Assets.Properties", 
+        "fields": {
+            "name": "item_indicator_position",
+            "friendly_name": "Item indicator position",
+ 	    "ptype": "select",
+	    "group" : "gallery",
+	    "value" : "[{\"name\":\"Top\",\"value\":\"top\"},{\"name\":\"Bottom\",\"value\":\"bottom\"},{\"name\":\"Right\",\"value\":\"right\"},{\"name\":\"Left\",\"value\":\"left\"}]"
+        }
+    },
+    {
+        "pk": 113, 
+        "model": "Assets.Properties", 
+        "fields": {
+            "name": "item_indicator_mode",
+            "friendly_name": "Item indicator mode",
+ 	    "ptype": "select",
+	    "group" : "gallery",
+	    "value" : "[{\"name\":\"Shape\",\"value\":\"shape\"},{\"name\":\"Thumbnail\",\"value\":\"thumbnail\"}]"
+        }
+    },
+    {
+        "pk": 114, 
+        "model": "Assets.Properties", 
+        "fields": {
+            "name": "item_indicator_label_style",
+            "friendly_name": "Item indicator label style",
+ 	    "ptype": "select",
+	    "group" : "gallery",
+	    "value" : "[{\"name\":\"None\",\"value\":\"none\"},{\"name\":\"Number\",\"value\":\"number\"},{\"name\":\"Alphabet\",\"value\":\"alphabet\"}]"
+        }
+    },
+
+    {
+        "pk": 115, 
+        "model": "Assets.Properties", 
+        "fields": {
+            "name": "enable_slider_head_interaction",
+            "friendly_name": "Enable slider head interaction",
+ 	    "ptype": "check",
+	    "group" : "gallery",
+	    "value" : "[{\"name\":\"True\",\"value\":\"true\"},{\"name\":\"False\",\"value\":\"false\"}]"
+        }
+    },
+    {
+        "pk": 116, 
+        "model": "Assets.Properties", 
+        "fields": {
+            "name": "highlight_edges",
+            "friendly_name": "Highlight edges",
+ 	    "ptype": "check",
+	    "group" : "gallery",
+	    "value" : "[{\"name\":\"True\",\"value\":\"true\"},{\"name\":\"False\",\"value\":\"false\"}]"
+        }
+    },
+    {
+        "pk": 117, 
+        "model": "Assets.Properties", 
+        "fields": {
+            "name": "enable_cue",
+            "friendly_name": "Enable cue",
+ 	    "ptype": "check",
+	    "group" : "gallery",
+	    "value" : "[{\"name\":\"True\",\"value\":\"true\"},{\"name\":\"False\",\"value\":\"false\"}]"
+        }
+    },
+    {
+        "pk": 118, 
+        "model": "Assets.Properties", 
+        "fields": {
+            "name": "cue_points",
+            "friendly_name": "Cue points",
+ 	    "ptype": "text",
+	    "group" : "gallery",
+	    "value" : "\"\""
+        }
+    },
+    {
+        "pk": 119, 
+        "model": "Assets.Properties", 
+        "fields": {
+            "name": "cue_labels",
+            "friendly_name": "Cue labels",
+ 	    "ptype": "text",
+	    "group" : "gallery",
+	    "value" : "\"\""
+        }
+    },
+    {
+        "pk": 120, 
+        "model": "Assets.Properties", 
+        "fields": {
+            "name": "cue_spacing",
+            "friendly_name": "Cue spacing",
+ 	    "ptype": "select",
+	    "value" : "[{\"name\":\"Equal\",\"value\":\"equal\"},{\"name\":\"Position based\",\"value\":\"position_based\"}]"
+        }
+    },
+
+    {
+        "pk": 121, 
+        "model": "Assets.Properties", 
+        "fields": {
+            "name": "slider_position",
+            "friendly_name": "Slider position",
+ 	    "ptype": "select",
+	    "group" : "gallery",
+	    "value" : "[{\"name\":\"Top\",\"value\":\"top\"},{\"name\":\"Bottom\",\"value\":\"bottom\"},{\"name\":\"Right\",\"value\":\"right\"},{\"name\":\"Left\",\"value\":\"left\"}]"
+        }
+    },
+  
+
+    {
+        "pk": 122, 
+        "model": "Assets.Properties", 
+        "fields": {
+            "name": "enable_slider",
+            "friendly_name": "Enable slider",
+ 	    "ptype": "check",
+	    "group" : "gallery",
+	    "value" : "[{\"name\":\"True\",\"value\":\"true\"},{\"name\":\"False\",\"value\":\"false\"}]"
+        }
+    },
+    {
+        "pk": 123, 
+        "model": "Assets.Properties", 
+        "fields": {
+            "name": "enable_slider_thumbnail",
+            "friendly_name": "Enable slider thumbnail",
+ 	    "ptype": "check",
+	    "group" : "gallery",
+	    "value" : "[{\"name\":\"True\",\"value\":\"true\"},{\"name\":\"False\",\"value\":\"false\"}]"
+        }
+    },
+    {
+        "pk": 124, 
+        "model": "Assets.Properties", 
+        "fields": {
+            "name": "enable_instructions",
+            "friendly_name": "Enable instructions",
+ 	    "ptype": "check",
+	    "group" : "gallery",
+	    "value" : "[{\"name\":\"True\",\"value\":\"true\"},{\"name\":\"False\",\"value\":\"false\"}]"
+        }
+    },
+    {
+        "pk": 125, 
+        "model": "Assets.Properties", 
+        "fields": {
+            "name": "instructions_image_placement",
+            "friendly_name": "Instructions image placement",
+ 	    "ptype": "text",
+	    "group" : "gallery",
+	    "value" : "\"80,20\""
+        }
+    },
+    {
+        "pk": 126, 
+        "model": "Assets.Properties", 
+        "fields": {
+            "name": "instructions_display_duration",
+            "friendly_name": "Instructions display duration",
+ 	    "ptype": "text",
+	    "group" : "gallery",
+	    "value" : "\"5\""
+        }
+    },
+    {
+        "pk": 127, 
+        "model": "Assets.Properties", 
+        "fields": {
+            "name": "instructions",
+            "friendly_name": "Instructions",
+ 	    "ptype": "text",
+	    "group" : "gallery",
+	    "value" : "\"5\""
+        }
+    },
+    {
+        "pk": 128, 
+        "model": "Assets.Properties", 
+        "fields": {
+            "name": "instructions_position",
+            "friendly_name": "Instructions position",
+ 	    "ptype": "text",
+	    "group" : "gallery",
+	    "value" : "\"5\""
+        }
+    },
+    {
+        "pk": 129, 
+        "model": "Assets.Properties", 
+        "fields": {
+            "name": "instructions_padding",
+            "friendly_name": "Instructions padding",
+ 	    "ptype": "text",
+	    "group" : "gallery",
+	    "value" : "\"5\""
+        }
+    }
+
+]
+    

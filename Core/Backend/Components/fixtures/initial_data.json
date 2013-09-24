@@ -1,0 +1,363 @@
+[
+
+    {
+        "pk": 1, 
+        "model": "Components.ModulesGroup", 
+        "fields": {
+            "group_name": "None"
+        }
+    },
+
+    {
+        "pk": 2, 
+        "model": "Components.ModulesGroup", 
+        "fields": {
+            "group_name": "Assets"
+        }
+    },
+    {
+        "pk": 3, 
+        "model": "Components.ModulesGroup", 
+        "fields": {
+            "group_name": "Users"
+        }
+    },
+
+    {
+        "pk": 1, 
+        "model": "Components.UserModules", 
+        "fields": {
+            "module_name": "Users"
+        }
+    },
+    {
+        "pk": 2, 
+        "model": "Components.UserModules", 
+        "fields": {
+            "module_name": "Groups", "groups" : 3
+        }
+    },
+    {
+        "pk": 3, 
+        "model": "Components.UserModules", 
+        "fields": {
+            "module_name": "Publication"
+        }
+    },
+    {
+        "pk": 4, 
+        "model": "Components.UserModules", 
+        "fields": {
+            "module_name": "Notification"
+        }
+    },
+
+    {
+        "pk": 5, 
+        "model": "Components.UserModules", 
+        "fields": {
+            "module_name": "Extended", "groups" : 2
+        }
+    },
+
+
+    {
+        "pk": 1, 
+        "model": "Components.UserActions", 
+        "fields": {
+            "action_name": "Create"
+        }
+    },
+
+    {
+        "pk": 2, 
+        "model": "Components.UserActions", 
+        "fields": {
+            "action_name": "Edit"
+        }
+    },
+    {
+        "pk": 3, 
+        "model": "Components.UserActions", 
+        "fields": {
+            "action_name": "Delete"
+        }
+    },
+    {
+        "pk": 4, 
+        "model": "Components.UserActions", 
+        "fields": {
+            "action_name": "View"
+        }
+    },
+    {
+        "pk": 5, 
+        "model": "Components.UserActions", 
+        "fields": {
+            "action_name": "Read"
+        }
+    },
+    {
+        "pk": 6, 
+        "model": "Components.UserActions", 
+        "fields": {
+            "action_name": "Publish"
+        }
+    },
+    {
+        "pk": 7, 
+        "model": "Components.UserActions", 
+        "fields": {
+            "action_name": "Send"
+        }
+    },
+    {
+        "pk": 8, 
+        "model": "Components.UserActions", 
+        "fields": {
+            "action_name": "Share"
+        }
+    },
+    {
+        "pk": 9, 
+        "model": "Components.UserActions", 
+        "fields": {
+            "action_name": "List"
+        }
+    },
+    {
+        "pk": 10, 
+        "model": "Components.UserActions", 
+        "fields": {
+            "action_name": "Settings"
+        }
+    },
+
+    {
+        "pk": 1, 
+        "model": "Components.UserPrivileges", 
+        "fields": {
+        "module": 1,
+	    "action" : 1,
+	    "friendly_name" : "Create",
+	    "privilege_name" : "User create"
+        }
+    },
+
+    {
+        "pk": 2, 
+        "model": "Components.UserPrivileges", 
+        "fields": {
+        "module": 1,
+	    "action" : 2,
+	    "friendly_name" : "Edit",
+	    "show_as_link":false, 
+	    "privilege_name" : "User edit"
+        }
+    },
+
+    {
+        "pk": 3, 
+        "model": "Components.UserPrivileges", 
+        "fields": {
+        "module": 1,
+	    "action" : 3,
+	    "friendly_name" : "Delete",
+	    "show_as_link":false, 
+	    "privilege_name" : "User delete"
+        }
+    },
+    {
+        "pk": 4, 
+        "model": "Components.UserPrivileges", 
+        "fields": {
+        "module": 1,
+	    "action" : 9,
+	    "friendly_name" : "List",
+	    "privilege_name" : "User list"
+        }
+    },
+    {
+        "pk": 6, 
+        "model": "Components.UserPrivileges", 
+        "fields": {
+        "module": 2,
+	    "action" : 1,
+	    "friendly_name" : "Create",
+	    "privilege_name" : "Group create"
+        }
+    },
+
+    {
+        "pk": 7, 
+        "model": "Components.UserPrivileges", 
+        "fields": {
+        "module": 2,
+	    "action" : 2,
+	    "friendly_name" : "Edit",
+	    "show_as_link":false, 
+	    "privilege_name" : "Group edit"
+        }
+    },
+
+    {
+        "pk": 8, 
+        "model": "Components.UserPrivileges", 
+        "fields": {
+        "module": 2,
+	    "action" : 3,
+	    "friendly_name" : "Delete",
+	    "show_as_link":false,
+	    "privilege_name" : "Group delete"
+        }
+    },
+    {
+        "pk": 5, 
+        "model": "Components.UserPrivileges", 
+        "fields": {
+        "module": 2,
+	    "action" : 9,
+	    "friendly_name" : "List",
+	    "show_as_link":false,
+	    "privilege_name" : "Groups list"
+        }
+    },
+
+
+    {
+        "pk": 9, 
+        "model": "Components.UserPrivileges", 
+        "fields": {
+        "module": 3,
+	    "action" : 1,
+	    "friendly_name" : "Create",
+	    "privilege_name" : "Publication create"
+        }
+    },
+
+    {
+        "pk": 10, 
+        "model": "Components.UserPrivileges", 
+        "fields": {
+        "module": 3,
+	    "action" : 2,
+	    "friendly_name" : "Edit",
+	    "show_as_link":false, 
+	    "privilege_name" : "Publication edit"
+        }
+    },
+
+    {
+        "pk": 11, 
+        "model": "Components.UserPrivileges", 
+        "fields": {
+        "module": 3,
+	    "action" : 3,
+	    "friendly_name" : "Delete",
+	    "show_as_link":false, 
+	    "privilege_name" : "Publication delete"
+        }
+    },
+
+    {
+        "pk": 12, 
+        "model": "Components.UserPrivileges", 
+        "fields": {
+        "module": 3,
+	    "action" : 4,
+	    "friendly_name" : "View",
+	    "privilege_name" : "Publication view"
+        }
+    },
+    {
+        "pk": 13, 
+        "model": "Components.UserPrivileges", 
+        "fields": {
+        "module": 3,
+	    "action" : 8,
+	    "friendly_name" : "Share",
+	    "privilege_name" : "Publication share"
+        }
+    },
+    {
+        "pk": 14, 
+        "model": "Components.UserPrivileges", 
+        "fields": {
+        "module": 3,
+	    "action" : 6,
+	    "friendly_name" : "Publish",
+	    "privilege_name" : "Publication publish"
+        }
+    },
+    {
+        "pk": 15, 
+        "model": "Components.UserPrivileges", 
+        "fields": {
+        "module": 4,
+	    "action" : 7,
+	    "friendly_name" : "Send",
+	    "privilege_name" : "Notification send"
+        }
+    },    {
+        "pk": 16, 
+        "model": "Components.UserPrivileges", 
+        "fields": {
+        "module": 4,
+	    "action" : 5,
+	    "friendly_name" : "Read",
+	    "privilege_name" : "Notification read"
+        }
+    },    {
+        "pk": 17, 
+        "model": "Components.UserPrivileges", 
+        "fields": {
+        "module": 4,
+	    "action" : 3,
+	    "friendly_name" : "Delete",
+	    "privilege_name" : "Notification delete"
+        }
+    },
+    {
+        "pk": 18, 
+        "model": "Components.UserPrivileges", 
+        "fields": {
+        "module": 5,
+	    "action" : 1,
+	    "friendly_name" : "Create",
+	    "privilege_name" : "Extended content create"
+        }
+    },
+    {
+        "pk": 19, 
+        "model": "Components.UserPrivileges", 
+        "fields": {
+        "module": 5,
+	    "action" : 2,
+	    "show_as_link":false,
+	    "friendly_name" : "Edit",
+        "privilege_name" : "Extended content Edit"
+        }
+    },
+    {
+        "pk": 20, 
+        "model": "Components.UserPrivileges", 
+        "fields": {
+        "module": 5,
+	    "action" : 3,
+	    "show_as_link":false,
+	    "friendly_name" : "Delete",
+	    "privilege_name" : "Extended content delete"
+        }
+    },
+    {
+        "pk": 21, 
+        "model": "Components.UserPrivileges", 
+        "fields": {
+        "module": 5,
+	    "action" : 9,
+	    "friendly_name" : "List",
+         "privilege_name" : "Extended content list"
+        }
+    }
+]
+    

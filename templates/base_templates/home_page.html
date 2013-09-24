@@ -1,0 +1,39 @@
+{% extends "base_templates/login.html" %}
+
+{% block sidebar %}
+	<div id="choose_country" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-header">
+	  	
+	    <h3 id="myModalLabel">Choose country</h3>
+	  </div>
+	  <div class="modal-body" style="overflow-y: auto">
+	  	<form class="form-signin form-horizontal">
+        	  <div class="control-group">
+			    <div class="control-label">
+			        <label for="chs_country" class="required">Country :</label> 
+			    </div>
+			    <div class="controls">
+			    	<select id="chs_country">
+			    	{% for country in countries %}
+			    	 <option value="/{{country.iso_code}}/">{{country.country_name}}</option>
+			    	{% endfor%}
+			    	</select>
+			    </div>
+			  </div>
+		</form>
+
+
+	  </div>
+
+	</div>	
+		<script language="JavaScript">
+			$( "#chs_country" ).change(function() {
+							document.location.href = $( "#chs_country option:selected" ).val()
+						});	
+			$('#choose_country').modal({
+			  backdrop: 'static',
+			  keyboard: false
+			})
+			$( "#choose_country" ).modal('show')
+		</script>
+{% endblock %}

@@ -1,0 +1,305 @@
+{% extends "base_templates/index.html" %}
+{% load i18n bootstrapped_goodies_tags %}
+{% load url from future %}
+
+{% block content %}
+
+<div class="container-fluid">
+	<div class="row-fluid">
+		<!-- LEFT TAB -->
+		<div  class="span2">
+					<div class="row">
+						{% render_with_template_if_exist "base_templates/Groups/groups_list.html" "upload" %}
+					</div>
+		</div>
+		<!-- LEFT TAB -->
+
+		<!-- RIGHT VIEW -->
+		<div class="span10">
+			<form class="form-horizontal well hide" data-async data-target="#rating-modal"  method="POST" action="/api/v1/users/user/">
+				<input id="id" readonly type="text" name="id">
+				<input id="username" type="text" name="username">
+				<input id="email" type="text" name="email">
+				<input id="groups" type="text" name="groups">
+				{% if profile.user.is_superuser %}
+					<input id="is_superuser" type="text" name="is_superuser" value="false">
+					<input id="is_active" type="text" name="is_active" value="true">
+				{%endif%}
+			</form>
+			 <div class="notifications top-center" id="alert-notification"></div>
+			{% block breadcrumbs %}
+			<ul class="breadcrumb row-fluid ">
+				<li>
+					<a href="{{home_url}}">{% trans 'Home' %}</a> 
+				</li>
+				{% if modules.selected.0 %}
+					<li>
+						<span class="divider">/</span> <a href="{{modules.selected.0.url}}">{{modules.selected.0.name}}</a> 
+					</li>
+				{% endif %}
+				{% if object_id %}
+					<li>
+						<span class="divider">/</span> <a href="#" id="breadcrum_{{object_id}}">{{object_id}}</a>
+					</li>						
+				{% endif %}					
+			</ul>
+			{% endblock %}
+			<div class="row-fluid well">
+				<div class="form-horizontal">
+					<div class="span6 well">
+						<div class="control-group">
+							<label class="control-label" for="display_user_name">User name : </label>
+							<div class="controls">
+								<input id="display_username" type="text" name="display_username">
+								<input id="display_id" class="hide" readonly type="text" name="display_id">
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="display_email">Email : </label>
+							<div class="controls">
+								<input id="display_email" type="text" name="display_email">
+							</div>
+						</div>
+						{% if profile.user.is_superuser %}
+							<div class="control-group">
+								<label class="control-label" for="display_is_superuser">Super user : </label>
+								<div class="controls">
+									<input id="display_is_superuser" type="checkbox" name="display_is_superuser">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="display_is_active">Active : </label>
+								<div class="controls">
+									<input id="display_is_active" type="checkbox" checked="checked" name="display_is_active">
+								</div>
+							</div>
+						{% endif %}
+						<div class="control-group">
+							<label class="control-label" for="display_is_superuser">Groups : </label>
+							<div class="controls">
+								<select name="display_groups" id="display_groups"></select>
+							</div>
+						</div>
+						<div class="control-group">
+							<div class="modal-footer">
+								<button id="save" form="orm-horizontal well" class="btn btn-primary" type="submit">
+									Save changes
+								</button>
+							</div>
+						</div>												
+					</div>
+				</div>
+				<script language="JavaScript">
+				
+					function processError(data, status){
+						response = 'Error saving data'
+						if(data.error){
+							response = data
+						}
+						if(data.responseText){
+							response = $.parseJSON(data.responseText)
+							if(response.error_message){
+								response = response.error_message
+							}
+							if(response.error){
+								response = response.error
+							}															
+						}
+						if (data.status == 400) {
+							resp = response
+							try
+							{
+								Errors = ''
+								for(s in resp)
+									Errors += s + ' : ' +resp[s][0] + '\n'
+								response  = Errors
+							}
+							catch(e){}
+							notification('danger',response)
+							//$('#errors').html('')
+							//$('#errors').html(data.responseJSON.error || data.responseJSON.error_message)
+						}
+						if (data.status == 404) {
+							response  = 'Resource not found'
+							notification('danger',response)
+							//$('#errors').html('')
+							//$('#errors').html(data.responseJSON.error || data.responseJSON.error_message)
+						}											
+						if (data.status == 500) {
+							notification('danger', response)
+							//$('#errors').html('')
+							//$('#errors').html(data.responseJSON.error || data.responseJSON.error_message)
+						}
+						//alert(response)
+			
+					}	
+					$('#save').click(function() {
+						createUsers();
+					});					
+					function notification(Type,Message){
+						//alert(note)
+						$('#alert-notification').html('')
+						$('.top-center').notify({type: Type,message: { text: Message}}).show();
+					}
+					function loadGroups(groups){
+						$('#display_groups').html('');
+						for(s in groups){
+							$('#display_groups').append('<option value="'+groups[s].id+'">'+groups[s].group_name+'</option>')
+						}
+					}
+					function createUsers(){
+								/*
+								 * 				<input id="id" readonly type="text" name="id">
+						<input id="username" type="text" name="username">
+						<input id="email" type="text" name="email">
+						<input id="groups" type="text" name="groups">
+								 * 
+								 */
+							//console.log(this);
+							//alert(JSON.stringify(serialiseFilesinformation()))
+							var $form = $('form[data-async]');
+							$('form[data-async]')[0]['username'].value = $("#display_username").val();
+							$('form[data-async]')[0]['email'].value = $("#display_email").val();
+						{% if profile.user.is_superuser %}
+							$('form[data-async]')[0]['is_superuser'].value =$("#display_is_superuser").attr('checked')!==undefined;
+							$('form[data-async]')[0]['is_active'].value =$("#display_is_active").attr('checked')!==undefined;
+						{% endif %}
+							$('form[data-async]')[0]['id'].value = $("#display_id").val();
+							$('form[data-async]')[0]['groups'].value = '/api/v1/groups/group/'+$( "#display_groups option:selected" ).val()+'/';
+		
+							if ($("#display_username").val() === "") {
+								notification('danger','Please provide name')
+								
+								return false;
+							} 
+							 else {
+								$('#save').attr("disabled", "disabled");
+								var $target = $($form.attr('data-target'));
+		
+								$.ajax({
+									type : $('form[data-async]')[0]['id'].value == "" ? $form.attr('method') : 'PUT',
+									url : $('form[data-async]')[0]['id'].value == "" ? $form.attr('action') : ($form.attr('action') + $('form[data-async]')[0]['id'].value + '/'),
+									data : $form.serialize(),
+		
+									success : function(data, status, xhr) {
+										if (xhr.status == 201){
+										
+											notification('success','Created successfully')
+											{% if modules.perm_users_edit %}
+											document.location.href = '{{home_url}}Users/Edit/' + data.id +'/';
+											{% endif %}
+											$('#save').removeAttr("disabled");
+											
+										}
+										if (xhr.status == 202){
+											$("#breadcrum_"+data.id).html(data.username);
+											notification('success','Updated successfully')
+											$('#save').removeAttr("disabled");
+		
+										}
+
+										if (data.id !== undefined) {
+											$("#breadcrum_"+ID).html(data.group_name)
+											$('#save').removeAttr("disabled");
+											
+										}
+		
+										
+									},
+									error : function(data, status) {
+										try{
+											processError(data,status)
+										}
+										catch(e){}
+										$('#save').removeAttr("disabled");
+									}
+								});
+					}
+
+						
+					}
+					function getGroups(){
+						
+						$.ajax({
+									type : 'GET',
+									url : '/api/v1/groups/limit/?limit=0' ,
+									data : '',
+									success : function(data, status) {
+										console.log(data)
+										loadGroups(data.groups)
+										$('#save').removeAttr("disabled");
+									},
+									error : function(data, status) {
+										try{
+											processError(data,status)
+										}
+										catch(e){}
+										$('#save').removeAttr("disabled");
+									}
+								});
+					}
+					$(document).ready(function() {
+							getGroups();				
+							var URL = document.location.href.toLowerCase();
+							if (URL.indexOf('users/edit/') != -1) {
+								//console.log( URL.split('assets/extended/#/edit/')[1] );
+								//ID = URL.split('assets/extended/edit/#/')[1];
+								notification('info','Loading user information')
+								ID = '{{object_id}}'
+
+								URL = '/api/v1/users/user/';
+								if(ID!='None'){
+								URL = URL +ID+'/?nocache=true' 
+								}
+								$.ajax({
+					            	type:'GET',
+					            	url: URL,
+					            	data: '',
+					            	success: function(data, status) {
+					            		//debugger;
+										$("#breadcrum_"+data.id).html(data.username);
+										$("#display_username").val(data.username);
+										$("#display_email").val(data.email);
+										$("#display_id").val(data.id);
+									{% if profile.user.is_superuser %}
+										if(data.is_superuser==true){
+											$("#display_is_superuser").attr('checked','checked');
+										}
+										else{
+											$("#display_is_superuser").removeAttr('checked');
+										}
+										if(data.is_active==true){
+											$("#display_is_active").attr('checked','checked');
+										}
+										else{
+											$("#display_is_active").removeAttr('checked');
+										}
+										
+									{% endif %}
+										$("#display_groups").val(data.groups.replace('/api/v1/groups/limit/','').replace('/',''))
+					            		
+										console.log(data)
+					            	},
+					            	error:function(data, status) {
+					            		console.log(data)
+					            	}
+					        	});
+								
+								
+							} else {
+								
+							}
+
+					});
+					
+				</script>
+			</div>
+		</div>
+	</div>
+	<!-- RIGHT VIEW -->
+</div>
+
+{% endblock %}
+
+{% block sidebar %}{% endblock %}
+

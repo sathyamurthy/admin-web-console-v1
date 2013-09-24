@@ -1,0 +1,186 @@
+{% load admin_static bootstrapped_goodies_tags %}{% load url from future %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>{% block title %}{% endblock %}</title>
+
+		<link  href="{% static "base/css/bootstrap.css" %}" rel="stylesheet"/>
+
+		<link  href="{% static "base/css/notification.css" %}" rel="stylesheet"/>
+		<link  href="{% static "base/css/jquery-ui.css" %}" rel="stylesheet"/>
+	    <link href="/static/base/css/jquery.fileupload-ui.css" rel="stylesheet">
+
+	    <!-- jQuery Javascript -->
+		<script src="{% static "base/js/jquery.min.js" %}"></script>
+		<!-- script src="http://code.jquery.com/jquery-1.10.1.min.js"></script-->
+		<script src="{% static "base/js/angular.min.js" %}"></script>
+
+	    <script src="{% static "base/js/jquery-ui.min.js" %}"></script>
+	    <!-- jQuery Templates -->
+	    <script src="{% static "base/js/jquery.tmpl.min.js" %}"></script>
+	
+	    <!-- Fixing CSRF in Django for jQuery -->
+	    <script src="/static/base/js/jquery_fix_csrf.js"></script>
+	
+		<script src="{% static "base/js/bootstrap.js" %}"></script>
+     	<script src="{% static "base/js/bootstrap-tab.js" %}"></script>
+     	<script src="{% static "base/js/bootstrap-notification.js" %}"></script>
+     	
+
+     	<link rel="stylesheet" type="text/css"  href="{% static "base/css/jquery.checkboxtree.css" %}"/>
+     	<link rel="stylesheet" type="text/css"  href="{% static "base/css/ui.jqgrid.css" %}"/>
+
+			
+		<!--[if lt IE 9]>
+		<link href="/static/assets/css/ec_ie_styles.css" rel="stylesheet">
+		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+		
+		{% block extrastyle %}{% endblock %}
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		    <!-- Some CSS for the jQuery uploader UI -->
+	</head>
+	<body>
+		<!-- TOP NAVIGATION -->
+		<div class="navbar navbar-inverse navbar-fixed-top">
+			<div class="navbar-inner">
+				<div class="container-fluid" id="topNav-c">
+					{% if modules %}
+						<div class="btn-group pull-left">
+							<a class="btn-nw dropdown-toggle" data-toggle="dropdown" href="#"> NEW <span class="caret"></span> </a>
+							<ul class="dropdown-menu">
+								{% if modules.publication_create %}
+									<li>
+										<a data-toggle="modal" href="#pubModal"><i class="eci-pub"></i> Publication </a>
+									</li>
+								{% endif %}
+								{% if modules.message_create %}
+									<li>
+										<a href="#"><i class="eci-notifi"></i> Notification </a>
+									</li>
+								{% endif %}
+								{% if modules.translation_create %}
+									<li>
+										<a data-replace="#" href="{{modules.translation_create.opt.0 }}"><i class="icon-retweet"></i> Translation </a>
+									</li>
+								{% endif %}
+								{% if modules.users_create %}
+									<li>
+										<a data-toggle="modal" href="{{modules.users_create.opt.0 }}"><i class="eci-user"></i> User </a>
+									</li>
+								{% endif %}
+								{% if modules.groups_create %}
+									<li>
+										<a data-toggle="modal" href="{{modules.groups_create.opt.0 }}"><i class="eci-user-grp"></i> User group </a>
+									</li>
+								{% endif %}
+								{% if modules.extended_create %}
+									<li>
+										<a data-toggle="modal" href="{{modules.extended_create.opt.0 }}"><i class="eci-trans"></i> Extented </a>
+									</li>
+								{% endif %}
+
+							</ul>
+						</div>
+						<form class="navbar-form pull-left">
+						<input class="input-xlarge" type="text" placeholder="Jump to publication, asset or search"/>
+						</form>
+						<ul class="nav">
+							{% for item in modules.mod %}
+							<li >
+								{% if item.name.lower != 'extended' and item.name.lower != 'groups' %}
+									<a href="{{item.url}}" class="{{item.sel}}">
+										{{item.name}}
+									</a>
+								{% endif %}
+								{% if item.name.lower == 'extended' %}
+									<a href="{{item.url}}" class="{{item.sel}}">
+										Assets
+									</a>
+								{% endif %}
+
+							</li>
+							{% endfor %}
+						</ul>
+						<div class="btn-group pull-right span">
+							{% if profile.user.is_active %}
+								<a class="btn-inverse dropdown-toggle span" data-toggle="dropdown" href="#"> {% filter force_escape %}{% firstof profile.user.first_name profile.user.username %}{% endfilter %} <span class="caret"></span> </a>
+								<ul class="dropdown-menu right-menu">
+									<!-- li>
+										<a href="#"><i class="icon-wrench"></i> Settings </a>
+									</li -->
+								
+									{% if modules.users_edit %}
+										<li>
+											<a href="{{modules.users_edit.opt.0 }}"><i class="icon-wrench"></i> Settings </a>
+										</li>
+									{% endif %}								
+									<li>
+										<a href="{{home_url}}Users/my_account/"><i class="icon-info-sign"></i> Account Info </a>
+									</li>
+									<li>
+										<a href="{{home_url}}password_change/"><i class="icon-info-sign"></i> Change password </a>
+									</li>
+									<li>
+										<a href="{{home_url}}"><i class="icon-question-sign"></i> Help </a>
+									</li>
+								
+									<li>
+										<a href="{{home_url}}signout/"><i class="icon-user"></i> Sign out</a>
+									</li>
+								</ul>
+							{% endif %}
+						</div>
+					{% endif %}
+				</div>
+			</div>
+			<!-- TOP NAVIGATION -->
+
+			<!-- ACTOION BAR -->
+			{% if modules.selected.0 %}
+				<div id="action-bar" class="container-fluid">
+
+								
+				<h1 class="pull-left">{{modules.selected.0.name}}</h1>
+				<div class="pull-right">
+					<ul class="action-nav">
+						{% for item in modules.selected.0.options %}
+							<li class="{{item.name.lower}}">
+								<a href="{{item.url}}#"><i class="icon-{{item.name.lower}} icon-white"></i> {{item.name}} </a>
+							</li>
+						{% endfor %}
+						<!-- li class="edit">
+							<a href="#"><i class="icon-edit icon-white"></i> Edit </a>
+						</li>
+						<li class="share">
+							<a href="#"><i class="icon-share icon-white"></i> Share </a>
+						</li>
+						<li class="preview">
+							<a href="#"><i class="icon-facetime-video icon-white"></i> Preview </a>
+						</li>
+						<li class="publs">
+							<a href="#"><i class="icon-upload icon-white"></i> Publish </a>
+						</li -->
+					</ul>
+				</div>
+				
+				</div>
+			{% endif %}
+			<!-- ACTOION BAR -->
+
+			<!-- CONTENT PART -->
+			<div class="container-fluid mid-content">
+				<!-- LEFT TAB -->
+				    <!-- Content -->
+
+
+        {% block content %}{{ content }}{% endblock %}
+        {% block sidebar %}{% endblock %}
+    
+    <!-- END Content -->
+				<!-- RIGHT AREA -->
+			</div>
+			<!-- CONTENT PART -->
+	</body>
+</html>

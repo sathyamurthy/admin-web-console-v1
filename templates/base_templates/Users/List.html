@@ -1,0 +1,174 @@
+{% extends "base_templates/index.html" %}
+{% load i18n bootstrapped_goodies_tags %}
+{% load url from future %}
+{% block extrastyle %}
+    <script src="/static/base/js/libs/underscore.min.js"></script>
+    <script src="/static/base/js/libs/backbone.js"></script>
+
+    <script src="/static/base/js/libs/grid/composed.js"></script>
+    <script src="/static/base/js/libs/grid/datagrid.js"></script>
+    <script src="/static/base/js/libs/grid/table.js"></script>
+    <script src="/static/base/js/libs/grid/header.js"></script>
+    <script src="/static/base/js/libs/grid/row.js"></script>
+    <script src="/static/base/js/libs/grid/controls.js"></script>
+    <script src="/static/base/js/libs/grid/controls/control.js"></script>
+    <script src="/static/base/js/libs/grid/controls/pagination.js"></script>
+    <script src="/static/base/js/libs/grid/controls/items-per-page.js"></script>
+    <script src="/static/base/js/libs/grid/cells/cell.js"></script>
+    <script src="/static/base/js/libs/grid/cells/callback-cell.js"></script>
+    <script src="/static/base/js/libs/grid/cells/action-cell.js"></script>
+    <script src="/static/base/js/libs/grid/cells/header-cell.js"></script>
+    <script src="/static/base/js/libs/grid/cells/template-cell.js"></script>
+    <script src="/static/base/js/libs/models/pager.js"></script>
+    <script src="/static/base/js/libs/models/sorter.js"></script>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container-fluid">
+	<div class="row-fluid">
+		<!-- LEFT TAB -->
+				<div  class="span2">
+					<div class="row">
+						{% render_with_template_if_exist "base_templates/Groups/groups_list.html" "upload" %}
+					</div>
+			
+				</div>
+				<!-- LEFT TAB -->
+
+				<!-- RIGHT VIEW -->
+				<div class="span10 right-view-wrp">
+					<div class="notifications top-center" id="alert-notification"></div>
+					{% block breadcrumbs %}
+					<ul class="breadcrumb row-fluid ">
+						<li>
+							<a href="{{home_url}}">{% trans 'Home' %}</a><span class="divider">/</span> 
+						</li>
+						{% if modules.selected.0 %}
+							<li>
+								<a href="{{modules.selected.0.url}}">{{modules.selected.0.name}}</a><span class="divider">/</span> 
+							</li>
+						{% endif %}
+
+						
+					</ul>
+					{% endblock %}
+					<script src="/static/base/js/jquery.jqGrid.min.js"></script>
+					<script src="/static/base/js/grid.locale-en.js"></script>					
+					<div class="span12">
+					      <div class="row well" >
+					        <div id="user-grid">
+					
+					        </div>
+
+					      </div>
+						    <script>
+						      Backbone.Datagrid = Datagrid;
+						    </script>	
+						    <!--script src="/static/base/js/libs/solar.js"></script -->				      
+						<style>
+							.ui-state-default{
+								height:auto !important;
+							}
+						</style>
+						<script language="javascript">
+
+							
+							function poplulateUserGrid(data){
+								
+								for(s in data.users){
+									if(data.users[s]['is_superuser']){
+										data.users[s]['is_superuser'] = "Yes"
+									}
+									else{
+										data.users[s]['is_superuser'] = "No"
+									}
+									if(data.users[s]['is_active']){
+										data.users[s]['is_active'] = "Yes"
+									}
+									else{
+										data.users[s]['is_active'] = "No"
+									}									
+									data.users[s]['groups'] = displayUsersGroups[data.users[s]['groups']]
+								}
+							  var User = Backbone.Model.extend();
+							
+							  var Users = Backbone.Collection.extend({
+							    model: User
+							  });
+							
+							  
+							  window.users = new Users();
+							  users.reset(data.users);
+							 {% if modules.perm_users_edit %}
+								var Views = {}
+								var View = { type: Backbone.Datagrid.ActionCell,label: 'Edit',actionClassName: 'btn btn-primary', action: function(planet) { editUser(planet.get('id'));return false;}} 
+								Views.view = View
+								data.models.push(Views)
+							 {% endif %}
+							 	
+							 	
+							 	//alert(data.models)
+								//alert($.parseJSON({view :{'type'))
+								//data.models.push()						
+							  window.usergrid = new Backbone.Datagrid({
+							    collection: users,
+							    inMemory: true,
+							    paginated: true,
+							    footerControls: {
+							      left: Backbone.Datagrid.ItemsPerPage,
+							      middle: {
+							        control: Backbone.Datagrid.Pagination,
+							        full: true
+							      }
+							    },
+							    perPage: 10,
+							 	columns:data.models
+							  });
+							 $('#user-grid').html('')
+							  usergrid.render().$el.appendTo('#user-grid');
+							}
+
+							{% if modules.perm_users_edit %}
+								function editUser(id){
+									document.location.href = '{{home_url}}Users/Edit/' +id+'/';
+								}
+							{% endif %}
+								function getUsersList(group_id){
+										URL = '/api/v1/users/user/?limit=0';
+										ID = '{{object_id}}'
+										if(group_id!==undefined){
+											ID = group_id 
+										}
+										if(ID!='None'){
+										URL = URL + '&gid='+ID 
+										}
+										$.ajax({
+							            	type:'GET',
+							            	url: URL,
+							            	data: '',
+							            	success: function(data, status) {
+												poplulateUserGrid(data)
+							            	},
+							            	error:function(data, status) {
+							            		console.log(data)
+							            	}
+							        	});
+
+								}								
+								$( document ).ready(function() {
+							    	getUsersList()
+								});
+						</script>
+												
+					</div>
+					</div>
+				</div>
+				<!-- RIGHT VIEW -->
+
+			</div>
+{% endblock %}
+
+{% block sidebar %}{% endblock %}
+

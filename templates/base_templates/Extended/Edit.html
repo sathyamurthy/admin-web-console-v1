@@ -1,0 +1,518 @@
+{% extends "base_templates/index.html" %}
+{% load i18n bootstrapped_goodies_tags %}
+{% load url from future %}
+
+{% block content %}
+
+<div class="container-fluid">
+	<div class="row-fluid">
+		<!-- LEFT TAB -->
+		<div id="resizable" class="span2 ec-tabs">
+			Left content
+		</div>
+		<!-- LEFT TAB -->
+
+		<!-- RIGHT VIEW -->
+		<div class="span10">
+			<form class="form-horizontal well hide" data-async data-target="#rating-modal"  method="POST" action="/api/v1/extended/create/">
+				<input id="id" readonly type="text" name="id">
+				<input id="name" type="text" name="name">
+				<input id="gallery_id" type="text" name="gallery_id">
+				<input id="preset" type="text" name="preset">
+				<input id="properties" type="text" name="properties" value="{}">
+				<input id="items" type="text" name="items" value="{}">
+			</form>
+			 <div class="notifications top-center" id="alert-notification"></div>
+				{% block breadcrumbs %}
+				<ul class="breadcrumb row-fluid ">
+					<li>
+						<a href="{{home_url}}">{% trans 'Home' %}</a> 
+					</li>
+					{% if modules.selected.0 %}
+						<li>
+							<span class="divider">/</span> <a href="{{modules.selected.0.url}}">{{modules.selected.0.name}}</a> 
+						</li>
+					{% endif %}
+					{% if object_id %}
+						<li>
+							<span class="divider">/</span> <a href="#" id="breadcrum_{{object_id}}">{{object_id}}</a>
+						</li>						
+					{% endif %}					
+				</ul>
+				{% endblock %}
+
+			<div class="row-fluid well">
+				<div class="form-horizontal">
+					<div class="span5">
+						<div class="control-group">
+							<label class="control-label" for="display_name">Name : </label>
+							<div class="controls">
+								<input id="display_name" type="text" name="display_name">
+								<input id="display_id" class="hide" readonly type="text" name="display_id">
+							</div>
+						</div>
+					</div>
+					<div class="span5">
+						<div class="control-group">
+							<label class="control-label" for="display_gallery_id">Gallery Id : </label>
+							<div class="controls">
+								<input id="display_gallery_id" type="text" name="display_gallery_id">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row-fluid well">
+				<ul class="nav nav-tabs" id="myTab">
+					<li>
+						<a data-toggle="tab" href="#tab-properties">Properties</a>
+					</li>
+					<li>
+						<a data-toggle="tab" href="#tab-items">Elements</a>
+					</li>
+				</ul>
+				<br clear="all">
+				<div class="tab-content">
+					<div class="tab-pane" class="well" id="tab-properties">
+						<form class=" form-horizontal well"  data-target="#rating-modal">
+							<div class="control-group">
+								<div class="controls">
+									<label class="control-label" for="preset">Gallery type : </label>
+									<select id="display_preset" type="text" name="display_preset">
+										<option value="">Select</option>
+									</select>
+								</div>
+							</div>
+						</form>
+						<form id="properties_form" class="form-horizontal" data-properties data-display data-target="#rating-modal">
+							<div id="properties_content" class="">
+
+							</div>
+						</form>
+					</div>
+					<div class="tab-pane" id="tab-items">
+						<div class="hide">
+							<label for="display_items">Items : </label>
+							<input id="display_items" type="text" name="display_items">
+						</div>
+						
+						{% if action == "edit" %}
+							<div id="FileUploader" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+							  <div class="modal-header">
+							    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+							    <h3 id="myModalLabel">File uploader</h3>
+							  </div>
+							  <div class="modal-body" style="overflow-y: auto">
+							    {% render_with_template_if_exist "base_templates/Extended/extended_gallery_upload.html" "upload" %}
+							  </div>
+							  <div class="modal-footer">
+							    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+							    <button class="btn btn-primary" data-dismiss="modal">Close</button>
+							  </div>
+							</div>
+							<div id="FileDelete" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+							  <div class="modal-header">
+							    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+							    <h3 id="myModalLabel">File Delete</h3>
+							  </div>
+							  <div class="modal-body" style="overflow-y: auto">
+							  </div>
+							  <div class="modal-footer">
+							    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+							    <button id="file-delete-close" class="btn btn-primary">Confirm delete</button>
+							  </div>
+							</div>
+
+							<div class="control-group">
+						     	<div class="controls pull-right">
+						     		<a class="btn btn-primary" id="deselect_all_files" role="button" data-backdrop="static" data-keyboard="false" >Deselect all</a>
+						     		<a class="btn btn-primary" id="select_all_files" role="button" data-backdrop="static" data-keyboard="false" >Select all</a>
+          							<a class="btn btn-primary" id="delete_files" data-toggle="modal" role="button" data-controls-modal="FileDelete" data-backdrop="static" data-keyboard="false" >Delete</a> 
+          							<a class="btn btn-primary" id="add_files" data-toggle="modal" href="#FileUploader" role="button" data-controls-modal="FileUploader" data-backdrop="static" data-keyboard="false" >Add images</a>
+     							</div>
+						 	</div>
+							<script language="JavaScript">
+
+								$("#deselect_all_files").click(function(){
+									$('input.file-delete-checkbox').each(function(){
+										$(this).attr('checked',false)
+									});
+								});	
+								$("#select_all_files").click(function(){
+									$('input.file-delete-checkbox').each(function(){
+										$(this).attr('checked',true)
+									});
+								});							
+								$("#file-delete-close").click(function(){
+									$('input.file-delete-checkbox:checked').each(function(){
+										deleteFiles($(this).attr('id'))
+									});
+									getFilesList();
+									$("#FileDelete").modal('hide');
+									
+								});
+								function deleteFiles(id)
+								{
+									$.ajax({
+										type : 'POST',
+										url : '/gallery/upload/?f='+id,
+										data : '',
+			
+										success : function(data, status, xhr) {
+											console.log(data)
+										},
+										error : function(data, status) {
+											console.log(data)
+										}
+									});
+								}
+								$("#delete_files").click(function(){
+									//if()
+									if($("#delete_files").attr("disabled") === undefined){
+										if($('input.file-delete-checkbox:checked').length==0)
+										{
+											notification('danger','Please select file(s) to delete')
+										}
+										else{
+											$('#FileDelete').modal({
+								                backdrop    : 'static',
+								                keyboard    : false
+								            }); 								
+										}
+									}
+								});
+								
+								$('#FileDelete').on('show', function () {
+									modelPopup = this;
+								    $(this).find('.modal-body').html('');
+								    $(this).find('.modal-body').append('<b>The following file(s) will be deleted</b><br />');
+								    $('input.file-delete-checkbox:checked').each(function(){
+									    // add $(this).val() to your list
+									    $(modelPopup).find('.modal-body').append( $(this).attr('name') + '<br>');
+									});
+								});
+								$('#FileUploader').on('hide', function () {
+									try{
+										
+										getFilesList();
+									}
+									catch(e){}
+								});
+								$('#add_files').click(function(){
+									$(".files").html('');
+								});
+								$('#FileUploader').css({
+								       'width': function () { 
+								           return ($(document).width() * .8) + 'px';  
+								       },
+								       'margin-left': function () { 
+								           return -($(this).width() / 2); 
+								       }
+								});
+							</script>
+						{% endif %}
+						{% render_with_template_if_exist "base_templates/Extended/ImageGallery.html" "upload" %}
+					</div>
+				</div>
+				<br clear="all">
+				<br>
+				<div class="modal-footer">
+					<button id="save" form="orm-horizontal well" class="btn btn-primary" type="submit">
+						Save changes
+					</button>
+				</div>
+			</div>
+
+			<script language="javascript">
+				function processError(data, status){
+					response = 'Error saving data'
+					if(data.error){
+						response = data
+					}
+					if(data.responseText){
+						response = $.parseJSON(data.responseText)
+						if(response.error_message){
+							response = response.error_message
+						}
+						if(response.error){
+							response = response.error
+						}															
+					}
+					if (data.status == 400) {
+						notification('danger',response)
+						//$('#errors').html('')
+						//$('#errors').html(data.responseJSON.error || data.responseJSON.error_message)
+					}
+					if (data.status == 404) {
+						response  = 'Resource not found'
+						notification('danger',response)
+						//$('#errors').html('')
+						//$('#errors').html(data.responseJSON.error || data.responseJSON.error_message)
+					}											
+					if (data.status == 500) {
+						notification('danger', response)
+						//$('#errors').html('')
+						//$('#errors').html(data.responseJSON.error || data.responseJSON.error_message)
+					}
+					//alert(response)
+		
+				}	
+				var CurrentProperties = {};
+				$(function() {
+					$('#myTab a').click(function(e) {
+						e.preventDefault();
+						$(this).tab('show');
+					});
+					$('#myTab a:first').tab('show')
+				});
+
+				function getPropertiesDetails(gallery_id, properties) {
+					notification('success','Getting properties details')
+					if (gallery_id !== undefined) {
+						$.ajax({
+							type : 'GET',
+							url : '/api/v1/gallerypreset/detail/?gid=' + gallery_id,
+							data : '',
+							success : function(data, status) {
+								$('#errors').html('')
+								if (data.gallery[0] !== undefined) {
+									$("#properties_content").html(data.gallery[0].properties_html)
+								}
+								if (properties !== undefined) {
+									setProperties(properties);
+								}
+
+								$('#save').removeAttr("disabled");
+							},
+							error : function(data, status) {
+								try{
+									processError(data,status)
+								}
+								catch(e){}
+								$('#save').removeAttr("disabled");
+							}
+						});
+					}
+				}
+
+
+				$("#display_preset").change(function() {
+					if ($("#display_preset option:selected").val() != "") {
+						getPropertiesDetails($("#display_preset option:selected").val(), CurrentProperties)
+					}
+				})
+				
+				function serialiseFilesinformation() {
+					var o = {'elements':[]};
+					
+					$.each($(".images-gallery img"), function() {
+						var attr = {};
+						$.each(this.attributes, function() {
+						    // this.attributes is not a plain object, but an array
+						    // of attribute nodes, which contain both the name and value
+						    if(this.specified) {
+						    	attr[this.name] = this.value
+						      //console.log(this.name, this.value);
+						    }
+						  });
+						o['elements'].push(attr);
+					});
+					return o;
+				};
+				function serializeFormObject(form) {
+					var o = {};
+					var a = form.serializeArray();
+					$.each(a, function() {
+						if (o[this.name] !== undefined) {
+							if (!o[this.name].push) {
+								o[this.name] = [o[this.name]];
+							}
+							o[this.name].push(this.value || '');
+						} else {
+							o[this.name] = this.value || '';
+						}
+					});
+					return o;
+				};
+				var note;
+				function notification(Type,Message){
+					//alert(note)
+					$('#alert-notification').html('')
+					$('.top-center').notify({type: Type,message: { text: Message}}).show();
+				}
+				function createGallery() {
+
+					//console.log(this);
+					//alert(JSON.stringify(serialiseFilesinformation()))
+					var $form = $('form[data-async]');
+					$('form[data-async]')[0]['gallery_id'].value = $("#display_gallery_id").val();
+					$('form[data-async]')[0]['name'].value = $("#display_name").val();
+					$('form[data-async]')[0]['properties'].value = JSON.stringify(serializeFormObject($('#properties_form')));
+					$('form[data-async]')[0]['items'].value = JSON.stringify(serialiseFilesinformation());
+					$('form[data-async]')[0]['id'].value = $("#display_id").val();
+					$('form[data-async]')[0]['preset'].value = $("#display_preset").val();
+
+					if ($("#display_name").val() === "") {
+						notification('danger','Please provide name for gallery')
+						
+						return false;
+					} else if ($("#gallery_id").val() === "") {
+						notification('danger','Please provide id for gallery')
+						return false;
+					} else if ($("#display_preset option:selected").val() === "") {
+						notification('danger','Select gallery')
+						return false;
+					} else {
+						$('#save').attr("disabled", "disabled");
+						var $target = $($form.attr('data-target'));
+
+						$.ajax({
+							type : $('form[data-async]')[0]['id'].value == "" ? $form.attr('method') : 'PUT',
+							url : $('form[data-async]')[0]['id'].value == "" ? $form.attr('action') : ($form.attr('action') + $('form[data-async]')[0]['id'].value + '/'),
+							data : $form.serialize(),
+
+							success : function(data, status, xhr) {
+								if (xhr.status == 201){
+								
+									notification('success','Created successfully')
+									document.location.href = '{{home_url}}Assets/Extended/Edit/' + data.id +'/';
+									
+								}
+								if (xhr.status == 202){
+									notification('success','Updated successfully')
+
+								}
+								
+								if (data.id !== undefined) {
+									$("#breadcrum_"+ID).html(data.name)
+									$('form[data-async]')[0]['gallery_id'].value = (data.gallery_id);
+									$('form[data-async]')[0]['name'].value = (data.name);
+									$('form[data-async]')[0]['properties'].value = (data.properties /* .replace(/u\'/g,"\"").replace(/\'/g,"\"") */);
+									$('form[data-async]')[0]['items'].value = (data.items);
+									$('form[data-async]')[0]['id'].value = (data.id);
+									$("#display_image_folder_id").val(data.id);
+									$('form[data-async]')[0]['preset'].value = (data.preset);
+									CurrentProperties = serializeFormObject($('#properties_form'));
+								}
+
+								$('#save').removeAttr("disabled");
+							},
+							error : function(data, status) {
+								try{
+									processError(data,status)
+								}
+								catch(e){}
+
+								$('#save').removeAttr("disabled");
+							}
+						});
+					}
+
+				}
+
+
+				$('#save').click(function() {
+					createGallery();
+				});
+
+				function galleryPresetList(preset, properties) {
+					notification('info','Getting gallery preset')
+					$.ajax({
+						type : 'GET',
+						url : '/api/v1/gallerypreset/list/?limit=0',
+						data : '',
+						success : function(data, status) {
+							if (data.gallery_preset[0] !== undefined) {
+								
+								for (key in data.gallery_preset) {
+								
+									if (preset == data.gallery_preset[key].id)
+										$('#display_preset').append("<option selected='selected' value='" + data.gallery_preset[key].id + "'>" + data.gallery_preset[key].name + "</option>");
+									else
+										$('#display_preset').append("<option value='" + data.gallery_preset[key].id + "'>" + data.gallery_preset[key].name + "</option>");
+									//('form[data-async]')[0]['preset'].value=(data.gallery_preset[0].preset);
+								}
+							}
+						},
+						error : function(data, status) {
+								try{
+									processError(data,status)
+								}
+								catch(e){}
+
+						}
+					});
+					getPropertiesDetails(preset, properties)
+					$('#save').removeAttr("disabled");
+
+				}
+
+				function setProperties(properties) {
+					for (s in properties) {
+						$("#" + s).val(properties[s])
+						//console.log($("#" + s + "_" + properties[s]).attr("type"))
+						if ($("#" + s + "_" + properties[s]).attr("type") == "select") {
+							$("#" + s + "_" + properties[s]).attr("selected", "selected")
+						}
+						if ($("#" + s + "_" + properties[s]).attr("type") == "radio") {
+							$("#" + s + "_" + properties[s]).attr("checked", "true")
+						}
+
+						//console.log(properties[s])
+					}
+
+				}
+
+
+				$(document).ready(function() {
+
+					var URL = document.location.href.toLowerCase();
+					if (URL.indexOf('assets/extended/edit/') != -1) {
+						//console.log( URL.split('assets/extended/#/edit/')[1] );
+						//ID = URL.split('assets/extended/edit/#/')[1];
+						notification('info','Loading gallery information')
+						ID = {{object_id}}
+						$.ajax({
+							type : 'GET',
+							url : '/api/v1/extended/detail/?gid=' + ID,
+							data : '',
+							success : function(data, status) {
+								$('#errors').html('')
+								if (data.extended_content[0] !== undefined) {
+									$("#breadcrum_"+ID).html(data.extended_content[0].name)
+									$("#display_gallery_id").val(data.extended_content[0].gallery_id);
+									$("#display_name").val(data.extended_content[0].name);
+									$("#display_id").val(data.extended_content[0].id);
+									$("#display_image_folder_id").val(data.extended_content[0].id);
+									$("#display_preset").val(data.extended_content[0].preset);
+									galleryPresetList(data.extended_content[0].preset, data.extended_content[0].properties);
+									CurrentProperties = data.extended_content[0].properties;
+									//$("#display_preset option[value='"+data.extended_content[0].preset+"']").attr("selected", "selected");
+									$("#display_items").val(data.extended_content[0].items);
+
+								}
+								$('#save').removeAttr("disabled");
+							},
+							error : function(data, status) {
+								try{
+									processError(data,status)
+								}
+								catch(e){}
+
+								$('#save').removeAttr("disabled");
+							}
+						});
+					} else {
+						galleryPresetList();
+					}
+
+				});
+			</script>
+		</div>
+	</div>
+	<!-- RIGHT VIEW -->
+</div>
+{% endblock %}
+
+{% block sidebar %}{% endblock %}
+

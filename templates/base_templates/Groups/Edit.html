@@ -1,0 +1,625 @@
+{% extends "base_templates/index.html" %}
+{% load i18n bootstrapped_goodies_tags %}
+{% load url from future %}
+
+{% block content %}
+
+<div class="container-fluid">
+	<div class="row-fluid">
+		<!-- LEFT TAB -->
+		<div class="span2 ">
+			<div class="row">
+				{% render_with_template_if_exist "base_templates/Groups/groups_list.html" "upload" %}
+			</div>
+		</div>
+		<!-- LEFT TAB -->
+
+		<!-- RIGHT VIEW -->
+		<div class="span10">
+			<form class="form-horizontal well hide" data-async data-target="#rating-modal"  method="POST" action="/api/v1/groups/group/">
+				<input id="id" readonly type="text" name="id">
+				<input id="group_name" type="text" name="group_name">
+				<input id="categories" type="text" name="categories">
+				<input id="modules" type="text" name="modules">
+				<input id="can_localise" type="text" name="can_localise" value="false">
+			</form>
+			 <div class="notifications top-center" id="alert-notification"></div>
+				{% block breadcrumbs %}
+				<ul class="breadcrumb row-fluid ">
+					<li>
+						<a href="{{home_url}}">{% trans 'Home' %}</a> 
+					</li>
+					{% if modules.selected.0 %}
+						<li>
+							<span class="divider">/</span> <a href="{{modules.selected.0.url}}">{{modules.selected.0.name}}</a> 
+						</li>
+					{% endif %}
+					{% if object_id %}
+						<li>
+							<span class="divider">/</span> <a href="#" id="breadcrum_{{object_id}}">{{object_id}}</a>
+						</li>						
+					{% endif %}					
+				</ul>
+				{% endblock %}
+
+			<div class="row-fluid well">
+				<div class="form-horizontal">
+					
+					<div class="span6 well">
+						<div class="control-group">
+							<label class="control-label" for="display_name">Group name : </label>
+							<div class="controls">
+								<input id="display_name" type="text" name="display_name">
+								<input id="display_id" class="hide" readonly type="text" name="display_id">
+							</div>
+						</div>
+
+						<div class="control-group">
+							<label class="control-label" for="display_gallery_id">Categories : </label>
+							<div class="controls">
+								{% if profile.user.is_superuser %}
+
+									<div id="category_creator_popup" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+									  <div class="modal-header">
+									    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+									    <h3 id="myModalLabel">Add categories</h3>
+									  </div>
+									  <form class="hide" category_create method="POST" action="/api/v1/categories/category/">
+									  	<input id="category_name" type="text" name="category_name">
+									  	<input id="parent" type="text" name="parent">
+									  </form>
+									  
+									  <div class="modal-body" style="overflow-y: auto">
+											<div class="control-group">
+												<label class="control-label" for="display_name">Parent : </label>
+												<div class="controls">
+													<select id="parent_category_name" name="parent_category_name">
+														
+													</select>
+												</div>
+											</div>
+											<div class="control-group">
+												<label class="control-label" for="cat_name">Name : </label>
+												<div class="controls">
+													<input id="cat_name" type="text" name="cat_name">
+												</div>
+											</div>
+											<div class="control-group">
+						     					<div class="controls pull-right">
+						     						<a class="btn btn-primary" id="create_category_button">Create</a>
+						     					</div>
+						     				</div>
+
+
+									  </div>
+									  <div class="modal-footer">
+									    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+									    <button class="btn btn-primary" data-dismiss="modal">Close</button>
+									  </div>
+									</div>
+
+									<div id="category_edit_popup" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+									  <div class="modal-header">
+									    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+									    <h3 id="myModalLabel">Edit categories</h3>
+									  </div>
+									  <form class="hide" category_edit method="PATCH" action="/api/v1/categories/category/">
+									  	<input id="category_name" type="text" name="category_name">
+									  </form>
+									  
+									  <div class="modal-body" style="overflow-y: auto">
+											<div class="control-group">
+												<label class="control-label" for="display_name">Select category : </label>
+												<div class="controls">
+													<select id="edit_category_name" name="edit_category_name">
+													</select>
+												</div>
+											</div>
+											<div class="control-group">
+												<label class="control-label" for="edit_cat_name">Name : </label>
+												<div class="controls">
+													<input id="edit_cat_name" type="text" name="edit_cat_name">
+												</div>
+											</div>
+											<div class="control-group">
+						     					<div class="controls pull-right">
+						     						<a class="btn btn-primary" id="category_edit_button">Update</a>
+						     					</div>
+						     				</div>
+
+
+									  </div>
+									  <div class="modal-footer">
+									    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+									    <button class="btn btn-primary" data-dismiss="modal">Close</button>
+									  </div>
+									</div>								
+									<div class="pull-right">
+										<a class="btn btn-primary" id="add" data-toggle="modal" href="#category_creator_popup" role="button" data-controls-modal="category_creator_popup" role="button" data-backdrop="static" data-keyboard="false" >Add</a>
+										<a class="btn btn-primary" id="edit" data-toggle="modal" href="#category_edit_popup" role="button" data-controls-modal="category_edit_popup" role="button" data-backdrop="static" data-keyboard="false" >Edit</a>
+									</div>
+									<script language="JavaScript">
+										$('#create_category_button').click(function() {
+											createCategories('form[category_create]');
+										});
+										$('#category_edit_button').click(function() {
+											updateCategory('form[category_edit]');
+										});
+
+									
+										function updateCategory(formName) {
+											var $form = $(formName);
+											$(formName)[0]['category_name'].value = $("#category_edit_popup #edit_cat_name").val();
+
+
+											if ($("#category_edit_popup #edit_cat_name").val() == "") {
+												notification('danger','Please provide name for category')
+												return false;
+											} 
+											 else {
+												$('#category_edit_button').attr("disabled", "disabled");
+												var $target = $($form.attr('data-target'));
+						
+												$.ajax({
+													type : $form.attr('method'),
+													url :$form.attr('action')+$("#category_edit_popup #edit_category_name option:selected").val()+'/',
+													data : $form.serialize(),
+						
+													success : function(data, status, xhr) {
+														if (xhr.status == 201){
+															notification('success','Created successfully')
+														}
+														$('#category_edit_button').removeAttr("disabled");
+														getCategories($('#category_edit_popup #edit_category_name'));
+														
+													},
+													error : function(data, status) {
+														try{
+															processError(data,status)
+														}
+														catch(e){}
+														$('#category_edit_button').removeAttr("disabled");
+													}
+												});
+											}
+
+										}
+
+										function createCategories(formName) {
+											var $form = $(formName);
+											$(formName)[0]['category_name'].value = $("#category_creator_popup #cat_name").val();
+											$(formName)[0]['parent'].value = $("#category_creator_popup #parent_category_name option:selected").val();
+
+
+											if ($("#category_creator_popup #cat_name").val() === "") {
+												notification('danger','Please provide name for category')
+												return false;
+											} 
+											 else {
+												$('#create_category_button').attr("disabled", "disabled");
+												var $target = $($form.attr('data-target'));
+						
+												$.ajax({
+													type : $form.attr('method'),
+													url :$form.attr('action'),
+													data : $form.serialize(),
+						
+													success : function(data, status, xhr) {
+														if (xhr.status == 201){
+															notification('success','Created successfully')
+														}
+														$('#create_category_button').removeAttr("disabled");
+														getCategories($('#category_creator_popup #parent_category_name'));
+														
+													},
+													error : function(data, status) {
+														try{
+															processError(data,status)
+														}
+														catch(e){}
+														$('#create_category_button').removeAttr("disabled");
+													}
+												});
+											}
+
+										}
+									
+										$('#category_creator_popup').on('show', function () {
+											$('#category_creator_popup #parent_category_name').html('')
+											$('#category_creator_popup #cat_name').val('')
+											$('#create_category_button').removeAttr("disabled");
+											modelPopup = this;
+											categoriesDropDown(categoriesInformation,$('#category_creator_popup #parent_category_name'),'')
+										});
+										$('#category_edit_popup').on('show', function () {
+											$('#category_edit_popup #edit_category_name').html('')
+											$('#category_edit_popup #edit_cat_name').val('')
+											$('#category_edit_button').removeAttr("disabled");
+											modelPopup = this;
+											categoriesDropDown(categoriesInformation,$('#category_edit_popup #edit_category_name'),'')
+											$( "#category_edit_popup #edit_category_name" ).change(function() {
+  												$('#category_edit_popup #edit_cat_name').val($( "#category_edit_popup #edit_category_name option:selected" ).text().replace(/--/g,''))
+											});
+										});
+
+										function categoriesDropDown(category,selectDropbox,indent){
+											selectDropbox.append('<option value="'+category.id+'" >'+indent+category.category_name+'</option>')
+											if(category.children){
+												if(category.children.length > 0){
+													for(child in category.children){
+														categoriesDropDown(category.children[child],selectDropbox,indent+'--')
+													}
+												}
+											}
+										}
+										function refreshDropdown(selectDD){
+											selectDD.html('')
+											categoriesDropDown(categoriesInformation,selectDD,'');
+										}
+									</script>
+									
+								{% endif %}	
+								<ul id="categories_tree" style="margin-top:10px;width:100%;height: 250px;overflow-y: auto" class="span3">
+								</ul>
+								<style>
+									#categories_tree input,#privilleges input{
+										float:left !important;
+										margin:4px 6px 0px 10px !important;
+									}
+									#privilleges{
+										width:100%;h
+									}
+									#privilleges li{
+										float: left;
+										width:33%;
+									}
+									#privilleges li ul li {
+										float: none;
+										width:100%;
+									}
+									
+								</style>
+
+							</div>
+						</div>
+						
+					</div>
+					<div class="span6 well">
+						<h3>Privilleges  </h3>
+						<hr>						
+						<div >
+								<ul id="privilleges" class="unstyled"></ul>
+							<br clear="all">
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row-fluid well">
+				<div class="modal-footer">
+					<button id="save" form="orm-horizontal well" class="btn btn-primary" type="submit">
+						Save changes
+					</button>
+				</div>
+			</div>
+			<script src="/static/base/js/jquery.checkboxtree.js"></script>
+			<script language="javascript">
+
+					function processError(data, status){
+						response = 'Error saving data'
+						if(data.error){
+							response = data
+						}
+						if(data.responseText){
+							response = $.parseJSON(data.responseText)
+							if(response.error_message){
+								response = response.error_message
+							}
+							if(response.error){
+								response = response.error
+							}															
+						}
+						if (data.status == 400) {
+							resp = response
+							try
+							{
+								Errors = ''
+								for(s in resp)
+									Errors += s + ' : ' +resp[s][0] + '\n'
+								response  = Errors
+							}
+							catch(e){}
+							notification('danger',response)
+							//$('#errors').html('')
+							//$('#errors').html(data.responseJSON.error || data.responseJSON.error_message)
+						}
+						if (data.status == 404) {
+							response  = 'Resource not found'
+							notification('danger',response)
+							//$('#errors').html('')
+							//$('#errors').html(data.responseJSON.error || data.responseJSON.error_message)
+						}											
+						if (data.status == 500) {
+							notification('danger', response)
+							//$('#errors').html('')
+							//$('#errors').html(data.responseJSON.error || data.responseJSON.error_message)
+						}
+						//alert(response)
+			
+					}		
+				function notification(Type,Message){
+					//alert(note)
+					$('#alert-notification').html('')
+					$('.top-center').notify({type: Type,message: { text: Message}}).show();
+				}
+				function serializeFormObject(form) {
+					var o = {};
+					var a = form.serializeArray();
+					$.each(a, function() {
+						if (o[this.name] !== undefined) {
+							if (!o[this.name].push) {
+								o[this.name] = [o[this.name]];
+							}
+							o[this.name].push(this.value || '');
+						} else {
+							o[this.name] = this.value || '';
+						}
+					});
+					return o;
+				};		
+				function getSelectedmodules() {		
+					r = ''
+					$.each($('#privilleges input:checkbox[name="modules"]'), function() {
+						if(this.checked){
+							r = r + this.value+ ','
+						}
+						
+					});
+					return r;
+				}
+				function getSelectedCategory() {		
+					r = ''
+					$.each($('#categories_tree input:checkbox'), function() {
+						if(this.checked){
+							r = r + this.value+ ','
+						}
+						
+					});
+					return r;
+				}
+
+				function createGroups() {
+
+					//console.log(this);
+					//alert(JSON.stringify(serialiseFilesinformation()))
+					var $form = $('form[data-async]');
+					$('form[data-async]')[0]['group_name'].value = $("#display_name").val();
+					$('form[data-async]')[0]['modules'].value = getSelectedmodules();
+					$('form[data-async]')[0]['categories'].value = getSelectedCategory();
+					$('form[data-async]')[0]['id'].value = $("#display_id").val();
+					$('form[data-async]')[0]['can_localise'].value = 'True'
+
+					if ($("#display_name").val() === "") {
+						notification('danger','Please provide name for group')
+						
+						return false;
+					} 
+					 else {
+						$('#save').attr("disabled", "disabled");
+						var $target = $($form.attr('data-target'));
+
+						$.ajax({
+							type : $('form[data-async]')[0]['id'].value == "" ? $form.attr('method') : 'PUT',
+							url : $('form[data-async]')[0]['id'].value == "" ? $form.attr('action') : ($form.attr('action') + $('form[data-async]')[0]['id'].value + '/'),
+							data : $form.serialize(),
+
+							success : function(data, status, xhr) {
+								if (xhr.status == 201){
+								
+									notification('success','Created successfully')
+									document.location.href = '{{home_url}}Users/Groups/Edit/' + data.id +'/';
+									
+								}
+								if (xhr.status == 202){
+									notification('success','Updated successfully')
+
+								}
+								try{
+									getGroupsList()
+								}catch(e){}
+								if (data.id !== undefined) {
+									$("#breadcrum_"+ID).html(data.group_name)
+									
+								}
+
+								$('#save').removeAttr("disabled");
+							},
+							error : function(data, status) {
+								try{
+									processError(data,status)
+								}
+								catch(e){}
+								$('#save').removeAttr("disabled");
+							}
+						});
+					}
+
+				}
+
+
+				$('#save').click(function() {
+					createGroups();
+				});
+
+				$('#categories_tree').checkboxTree();
+				
+				function categoryBuilder(category,treeBuilder){
+					treeBuilder = treeBuilder + '<li><input id="cat_id_li_'+category.id+'" value="'+category.id+'" type="checkbox"><label for="cat_id_li_'+category.id+'" >'+category.category_name+'</label>';
+					if(category.children){
+						if(category.children.length > 0){
+						treeChildBuilder = '' 
+						treeChildBuilder = treeChildBuilder +'<ul>'
+						for(child in category.children){
+							treeChildBuilder = treeChildBuilder+ categoryBuilder(category.children[child],'')
+						}
+						treeChildBuilder = treeChildBuilder +'</ul>'
+						treeBuilder = treeBuilder + treeChildBuilder;
+						}
+					}
+					treeBuilder = treeBuilder + '</li>';
+					return treeBuilder;
+				}
+				function setPermission(permission){
+					for(prv in permission){
+						$('#perm_'+permission[prv].privilege_id).attr({'checked':true})
+					}
+				}
+				function setCategories(categories){
+					for(cat in categories){
+						$('#cat_id_li_'+categories[cat].id).attr({'checked':true})
+						
+					}
+					
+				}
+				categoriesInformation = {};
+				SelectedCategories = {};
+				function getCategories(callback){
+						$.ajax({
+							type : 'GET',
+							url : '/api/v1/categories/category/' ,
+							data : '',
+							success : function(data, status) {
+								$('#errors').html('')
+								if (data.categories !== undefined) {
+										$('#categories_tree').html('');
+										var treeBuilder = '';
+										categoriesInformation = data.categories[0];
+										treeBuilder = categoryBuilder(data.categories[0],treeBuilder)
+										$('#categories_tree').append(treeBuilder)
+										setCategories(SelectedCategories)
+										if(callback !== undefined){
+											refreshDropdown(callback)
+										}
+								}
+								$('#save').removeAttr("disabled");
+							},
+							error : function(data, status) {
+								if (data.status == 400) {
+									$('#errors').html()
+									$('#errors').html(data.responseJSON.error)
+								}
+								if (data.status == 500) {
+									$('#errors').html()
+									$('#errors').html(data.responseJSON.error)
+								}
+								$('#save').removeAttr("disabled");
+							}
+						});
+					
+				}
+			
+			$(document).ready(function() {
+					getCategories();				
+					var URL = document.location.href.toLowerCase();
+					if (URL.indexOf('users/groups/edit/') != -1) {
+						//console.log( URL.split('assets/extended/#/edit/')[1] );
+						//ID = URL.split('assets/extended/edit/#/')[1];
+						notification('info','Loading group information')
+						ID = '{{object_id}}'
+						$.ajax({
+							type : 'GET',
+							url : '/api/v1/groups/group/' + ID + '/',
+							data : '',
+							success : function(data, status) {
+								$('#errors').html('')
+								if (data.all_permission.modules !== undefined) {
+									loadPrivileges(data.all_modules,data.all_permission)
+									$("#breadcrum_"+ID).html(data.group_name)
+									$("#display_name").val(data.group_name)
+									$("#display_id").val(data.id)
+									setPermission(data.modules)
+									SelectedCategories = data.category;
+									setCategories(data.category)
+								}
+								$('#save').removeAttr("disabled");
+							},
+							error : function(data, status) {
+								try{
+									processError(data,status)
+								}
+								catch(e){}
+								$('#save').removeAttr("disabled");
+							}
+						});
+					} else {
+						getPermission();
+					}
+
+				});
+				function loadPrivileges(modules,permission){
+					$('#privilleges').html('')
+					var MODULES={}
+					
+					for(module in modules){
+							MODULES[modules[module].id] = {'name':modules[module].name,'modules':[]};
+					}
+					for(prv in permission.modules){
+						MODULES[permission.modules[prv].module].modules.push(permission.modules[prv])
+					}					
+					//console.log(MODULES);
+					
+					for(mod in MODULES){
+						if(MODULES[mod].modules.length > 0 ){
+							var moduleBuilder = '';
+							//$('#privilleges').append('<li><h4>'+MODULES[mod].name+'</h4>')
+							moduleBuilder = moduleBuilder + '<li><h4>'+MODULES[mod].name+'</h4>';
+							//$('#privilleges').append('<div><ul>')
+							moduleBuilder = moduleBuilder + '<ul class="unstyled">';
+								for(prv in MODULES[mod].modules){
+								//console.log(data.permission[0].modules[prv].module )
+								
+									pv_name = MODULES[mod].modules[prv].friendly_name != "" ?MODULES[mod].modules[prv].friendly_name:MODULES[mod].modules[prv].privilege_name;
+									//$('#privilleges').append('<li> <input type="checkbox" name="modules" id="perm_'+MODULES[mod].modules[prv].privilege_id+'" value="'+MODULES[mod].modules[prv].privilege_id+'"><label for="perm_'+MODULES[mod].modules[prv].privilege_id+'">'+pv_name+'</label></li>')
+									moduleBuilder = moduleBuilder + '<li> <input type="checkbox" name="modules" id="perm_'+MODULES[mod].modules[prv].privilege_id+'" value="'+MODULES[mod].modules[prv].privilege_id+'"><label for="perm_'+MODULES[mod].modules[prv].privilege_id+'">'+pv_name+'</label></li>';
+								
+								
+							}
+							moduleBuilder = moduleBuilder + '</ul></li>'
+							$('#privilleges').append(moduleBuilder)
+						}
+					}
+					
+
+				}		
+				function getPermission() {
+					notification('success','Getting Permission details')
+					
+						$.ajax({
+							type : 'GET',
+							url : '/api/v1/groups/permission/',
+							data : '',
+							success : function(data, status) {
+								$('#errors').html('')
+								loadPrivileges(data.modules,data.permission[0])
+								$('#save').removeAttr("disabled");
+							},
+							error : function(data, status) {
+								try{
+									processError(data,status)
+								}
+								catch(e){}
+								$('#save').removeAttr("disabled");
+							}
+						});
+					
+				}
+						
+</script>
+
+		</div>
+	</div>
+	<!-- RIGHT VIEW -->
+</div>
+{% endblock %}
+
+{% block sidebar %}{% endblock %}
+

@@ -1,0 +1,48 @@
+{% extends "base_templates/index.html" %}
+{% load i18n bootstrapped_goodies_tags %}
+{% load url from future %}
+
+{% block content %}
+			<div class="row-fluid">
+				<ul class="span2 list-group unstyled well" id="groups_list_info">
+					
+					
+					
+				</ul>
+				<style>
+					#groups_list_info li label{
+						float:left;
+						margin-top:10px;
+					}
+				</style>
+				<script language="javascript">
+					function editGroups(id){
+						document.location.href = '{{home_url}}Users/Groups/Edit/' +id+'/';
+					}
+					function getGroupsList(){
+							$.ajax({
+				            	type:'GET',
+				            	url: '/api/v1/groups/group/',
+				            	data: '',
+				            	success: function(data, status) {
+				            		//debugger;
+				            		$('#groups_list_info').html('')
+									for(s in data.groups){
+										$('#groups_list_info').append('<li class="row-fluid list-group-item" id="'+data.groups[s].id+'"><label>'+data.groups[s].group_name+'</label><a href="javascript:editGroups('+data.groups[s].id+')" class="btn btn-primary pull-right">Edit</a></li>')
+									}
+				            	},
+				            	error:function(data, status) {
+				            		console.log(data)
+				            	}
+				        	});
+
+					}								
+					$( document ).ready(function() {
+				    	getGroupsList()
+					});
+				</script>
+			</div>
+{% endblock %}
+
+{% block sidebar %}{% endblock %}
+

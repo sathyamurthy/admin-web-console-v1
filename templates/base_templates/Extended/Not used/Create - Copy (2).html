@@ -1,0 +1,175 @@
+{% extends "base_templates/index.html" %}
+{% load i18n bootstrapped_goodies_tags %}
+{% load url from future %}
+
+{% if not is_popup %}
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+<li><a href="{% url 'custom_login:index' %}">{% trans 'Home' %}</a> <span class="divider">/</span></li>
+{% for app in app_list %}
+<li>{% render_with_template_if_exist app.name|lower|add:"/admin_app_name.html" app.name %}{% if not forloop.last %} <span class="divider">/</span>{% endif %}</li>
+{% endfor %}
+</ul>
+{% endblock %}
+{% endif %}
+
+{% block content %}
+
+
+			<div class="row-fluid">
+				<!-- LEFT TAB -->
+				<div id="resizable" class="span2 ec-tabs">
+				</div>
+				<!-- LEFT TAB -->
+
+				<!-- RIGHT VIEW -->
+				<div class="span10 right-view-wrp">
+					<div>
+						<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+
+							<form class="form-horizontal well" data-async data-target="#rating-modal"  method="POST" action="/api/v1/extended/create/">
+								<span id="errors"></span>
+								<div style="width:30%;float:left">
+									<label for="id">Id : </label> <input id="id" readonly="true" type="text" name="id"> <br>
+									<label for="name">Name : </label> <input id="name" type="text" name="name"> <br>
+									<label for="gallery_id">gallery Id : </label> <input id="gallery_id" type="text" name="gallery_id"> <br>
+								</div>
+								<div style="width:70%;float:right;">
+										<div class="bs-docs">
+											<ul class="nav nav-tabs" id="myTab">
+  													<li><a data-toggle="tab" href="#tab-properties">Properties</a></li>
+  													<li><a data-toggle="tab" href="#tab-items">Items</a></li>
+											</ul>
+											<br clear="all">
+											<div class="tab-content">
+  												<div class="tab-pane" id="tab-properties">
+  													
+  													<label for="preset">Gallery type : </label>
+  													<input id="preset" type="text" name="preset" > <br>
+  													
+  													<label for="properties">Properties : </label> 
+  													
+  													<input id="properties" type="text" name="properties"> <br>
+  												</div>
+  												<div class="tab-pane" id="tab-items">
+													<label for="items">Items : </label> <input id="items" type="text" name="items">
+												</div>
+											</div>	
+											 <script>
+											  $(function () {
+											    $('#myTab a').click(function (e) {
+												  e.preventDefault();
+												  $(this).tab('show');
+												});
+											  });
+											</script>
+											
+										</div>
+
+								</div>
+								<br clear="all"><br>
+								<div class="modal-footer">
+	    							<button id="save" form="orm-horizontal well" class="btn btn-primary" type="submit">Save changes</button>
+								</div>
+							</form>
+						
+						<script language="javascript">
+							    $('#save').click(function() {
+							    	$('#errors').html('')
+							    	//console.log(this);
+							    	$('#save').attr("disabled", "disabled");
+							    	var $form = $('form[data-async]');
+
+							        var $target = $($form.attr('data-target'));
+							 
+							        $.ajax({
+							            type: $('form[data-async]')[0]['id'].value==""?$form.attr('method'):'PUT',
+							            url: $('form[data-async]')[0]['id'].value==""?$form.attr('action') : ($form.attr('action') + $('form[data-async]')[0]['id'].value + '/'),
+							            data: $form.serialize(),
+							 
+							            success: function(data, status,xhr) {
+							            	if(xhr.status == 201)
+							            		$('#errors').html('Created successfully')
+							            	if(xhr.status == 202)
+							            		$('#errors').html('Updated successfully')
+											document.location.href= '/home/Assets/Extended/Edit/#/'+data.id
+											
+							            		if(data.id !== undefined)
+							            		{
+													$('form[data-async]')[0]['gallery_id'].value= (data.gallery_id);
+													$('form[data-async]')[0]['name'].value=(data.name);
+													$('form[data-async]')[0]['properties'].value=(data.properties);
+													$('form[data-async]')[0]['items'].value=(data.items);
+													$('form[data-async]')[0]['id'].value=(data.id);
+													$('form[data-async]')[0]['preset'].value=(data.preset);
+												}
+											
+        								     $('#save').removeAttr("disabled");
+							            },
+							            error:function(data, status) {
+							            	if(data.status == 400)
+							            	{
+							            		$('#errors').html('')
+							            		$('#errors').html(data.responseJSON.error || data.responseJSON.error_message)
+							            	}
+							            	if(data.status == 500)
+							            	{
+							            		$('#errors').html('')
+							            		$('#errors').html(data.responseJSON.error || data.responseJSON.error_message)
+							            	}
+							            	$('#save').removeAttr("disabled");
+							            }
+							        });
+							    });
+							    $( document ).ready(function() {
+
+							    	var URL = document.location.href.toLowerCase();
+							    	if(URL.indexOf('assets/extended/edit/#/') != -1) {
+							    		//console.log( URL.split('assets/extended/#/edit/')[1] );
+							    		ID = URL.split('assets/extended/edit/#/')[1];
+							        	$.ajax({
+							            	type:'GET',
+							            	url: '/api/v1/extended/detail/?gid=' + ID,
+							            	data: '',
+							            	success: function(data, status) {
+							            		$('#errors').html('')
+							            		if(data.extended_content[0] !== undefined)
+							            		{
+													$('form[data-async]')[0]['gallery_id'].value= (data.extended_content[0].gallery_id);
+													$('form[data-async]')[0]['name'].value=(data.extended_content[0].name);
+													$('form[data-async]')[0]['properties'].value=(data.extended_content[0].properties);
+													$('form[data-async]')[0]['items'].value=(data.extended_content[0].items);
+													$('form[data-async]')[0]['id'].value=(data.extended_content[0].id);
+													$('form[data-async]')[0]['preset'].value=(data.extended_content[0].preset);
+												}
+        								     	$('#save').removeAttr("disabled");
+							            	},
+							            	error:function(data, status) {
+							            		if(data.status == 400)
+							            		{
+							            			$('#errors').html()
+							            			$('#errors').html(data.responseJSON.error)
+							            		}
+							            		if(data.status == 500)
+							            		{
+							            			$('#errors').html()
+							            			$('#errors').html(data.responseJSON.error)
+							            		}
+							            		$('#save').removeAttr("disabled");
+							            	}
+							        	});
+							    	}
+    									
+								});
+						</script>
+												
+					</div>
+					
+				</div>
+				<!-- RIGHT VIEW -->
+
+			</div>
+{% endblock %}
+
+{% block sidebar %}{% endblock %}
+

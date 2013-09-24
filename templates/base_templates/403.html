@@ -1,0 +1,22 @@
+{% extends "base_templates/base_site.html" %}
+{% load i18n %}
+{% load url from future %}
+
+{% block breadcrumbs %}
+<ul class="breadcrumb">
+<li><a href="{{home_url}}">{% trans 'Home' %}</a> <span class="divider">/</span></li>
+<li>{% trans 'Server error' %}</li>
+</ul>
+{% endblock %}
+
+{% block title %}{% trans 'Server error (403)' %}{% endblock %}
+
+{% block content %}
+<style>
+	.container-fluid {color:#fff !important}
+</style>
+
+<h1>{% trans 'Server Error <em>(403)</em>' %}</h1>
+<p>{{error}}</p>
+
+{% endblock %}

@@ -1,0 +1,68 @@
+			<div class="row-fluid">
+				<ul class="list-group unstyled well" id="groups_list_info">
+					
+					
+					
+				</ul>
+				
+				<style>
+					#groups_list_info li label{
+						float:left;
+						display:block;
+						margin-top:10px;
+					}
+
+				</style>
+				<script language="javascript">
+					function editGroups(id){
+						document.location.href = '{{home_url}}Users/Groups/Edit/' +id+'/';
+					}
+					function userList(id){
+					 {% if modules.perm_users_list %}
+						var URL = document.location.href.toLowerCase();
+						if (URL.indexOf('users/list/') != -1) {
+							//document.location.href = '{{home_url}}Users/List/#' + id;
+							getUsersList(id)
+						}
+						else{						
+							document.location.href = '{{home_url}}Users/List/'+id;
+						}
+					 {% endif %}
+					}
+					displayUsersGroups = {};
+					function getGroupsList(){
+							$.ajax({
+				            	type:'GET',
+				            	url: '/api/v1/groups/limit/?limit=0',
+				            	data: '',
+				            	success: function(data, status) {
+				            		//debugger;
+				            		$('#groups_list_info').html('')
+				            		{% if modules.perm_groups_edit %}
+										for(s in data.groups){
+											displayUsersGroups[data.groups[s].id] = data.groups[s].group_name
+											$('#groups_list_info').append('<li class="row-fluid list-group-item" ><label id="'+data.groups[s].id+'">'+data.groups[s].group_name+'</label><a href="javascript:editGroups('+data.groups[s].id+')" class="btn btn-primary pull-right">Edit</a></li>')
+										}
+									{% endif %}
+									{% if not modules.perm_groups_edit %}
+										for(s in data.groups){
+											displayUsersGroups[data.groups[s].id] = data.groups[s].group_name
+											$('#groups_list_info').append('<li class="row-fluid list-group-item" ><label id="'+data.groups[s].id+'">'+data.groups[s].group_name+'</label></li>')
+										}									
+									{% endif %}
+									$('#groups_list_info li label').click(function(){
+										userList($(this).attr('id'))
+									});
+
+				            	},
+				            	error:function(data, status) {
+				            		console.log(data)
+				            	}
+				        	});
+
+					}								
+					$( document ).ready(function() {
+				    	getGroupsList()
+					});
+				</script>
+			</div>

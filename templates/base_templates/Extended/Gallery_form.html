@@ -1,0 +1,33 @@
+{% block content %}
+<div class="span5"></div>
+<div class="span5"></div>
+{% for item in form.properties %}
+<div class="span5">
+	<div class="control-group">
+	    <label class="control-label" for="{{item.name}}">{{item.friendly_name}} :</label>
+	    <div class="controls">
+			{%  if item.ptype == "text" %}
+			<input id="{{item.name}}" type="text" value="{{item.value}}" name="{{item.name}}" required> 
+			{% endif %}
+			{%  if item.ptype == "select" %}
+			<select id="{{item.name}}" type="text" name="{{item.name}}">
+				{% for option in item.value %}
+					<option type="select" id="{{item.name}}_{{option.value}}" value="{{option.value}}" >{{option.name}}</option>
+				{% endfor %}
+			</select> 
+			{% endif %}
+			
+			{%  if item.ptype == "check" %}
+	
+				{% for option in item.value %}
+					<label class="checkbox"> <input style="margin-top:-3px !important" id="{{item.name}}_{{option.value}}" type="radio" value="{{option.value}}" name="{{item.name}}"> {{option.name}}</label>
+				{% endfor %}
+	
+			{% endif %}
+	    </div>
+	 </div>
+ </div>
+{% endfor %}
+{% endblock %}
+
+

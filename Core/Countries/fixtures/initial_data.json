@@ -1,0 +1,437 @@
+[
+    {
+        "pk": 1,
+        "model": "Countries.WorldRegion",
+        "fields": {
+            "region": "US"
+        }
+    },
+    {
+        "pk": 2,
+        "model": "Countries.WorldRegion",
+        "fields": {
+            "region": "EU"
+        }
+    },
+    {
+        "pk": 3,
+        "model": "Countries.WorldRegion",
+        "fields": {
+            "region": "Asia"
+        }
+    },
+    {
+        "pk": 1000,
+        "model": "Countries.WorldCountries",
+        "fields": {
+            "country_name": "All countries",
+            "iso_code": "A1A",
+            "region": 3
+        }
+    },
+    {
+        "pk": 1,
+        "model": "Countries.WorldCountries",
+        "fields": {
+            "country_name": "Australia (NSW, QLD, VIC)",
+            "iso_code": "AUE",
+            "region": 3
+        }
+    },
+    {
+        "pk": 2,
+        "model": "Countries.WorldCountries",
+        "fields": {
+            "country_name": "Australia (SA, WA)",
+            "iso_code": "AUW",
+            "region": 3
+        }
+    },
+    {
+        "pk": 3,
+        "model": "Countries.WorldCountries",
+        "fields": {
+            "country_name": "China",
+            "iso_code": "CN",
+            "region": 3
+        }
+    },
+    {
+        "pk": 4,
+        "model": "Countries.WorldCountries",
+        "fields": {
+            "country_name": "Hong Kong",
+            "iso_code": "HK",
+            "region": 3
+        }
+    },
+    {
+        "pk": 5,
+        "model": "Countries.WorldCountries",
+        "fields": {
+            "country_name": "Japan",
+            "iso_code": "JP",
+            "region": 3
+        }
+    },
+    {
+        "pk": 6,
+        "model": "Countries.WorldCountries",
+        "fields": {
+            "country_name": "Malaysia",
+            "iso_code": "MY",
+            "region": 3
+        }
+    },
+    {
+        "pk": 7,
+        "model": "Countries.WorldCountries",
+        "fields": {
+            "country_name": "Singapore",
+            "iso_code": "SG",
+            "region": 3
+        }
+    },
+    {
+        "pk": 8,
+        "model": "Countries.WorldCountries",
+        "fields": {
+            "country_name": "Thailand",
+            "iso_code": "TH",
+            "region": 3
+        }
+    },
+    {
+        "pk": 9,
+        "model": "Countries.WorldCountries",
+        "fields": {
+            "country_name": "Taiwan",
+            "iso_code": "TW",
+            "region": 3
+        }
+    },
+    {
+        "pk": 10,
+        "model": "Countries.WorldCountries",
+        "fields": {
+            "country_name": "United Arab Emirates",
+            "iso_code": "AE",
+            "region": 2
+        }
+    },
+    {
+        "pk": 11,
+        "model": "Countries.WorldCountries",
+        "fields": {
+            "country_name": "Austria",
+            "iso_code": "AT",
+            "region": 2
+        }
+    },
+    {
+        "pk": 12,
+        "model": "Countries.WorldCountries",
+        "fields": {
+            "country_name": "Belgium",
+            "iso_code": "BE",
+            "region": 2
+        }
+    },
+    {
+        "pk": 13,
+        "model": "Countries.WorldCountries",
+        "fields": {
+            "country_name": "Bulgaria",
+            "iso_code": "BG",
+            "region": 2
+        }
+    },
+    {
+        "pk": 14,
+        "model": "Countries.WorldCountries",
+        "fields": {
+            "country_name": "Switzerland",
+            "iso_code": "CH",
+            "region": 2
+        }
+    },
+    {
+        "pk": 15,
+        "model": "Countries.WorldCountries",
+        "fields": {
+            "country_name": "Cyprus",
+            "iso_code": "CY",
+            "region": 2
+        }
+    },
+    {
+        "pk": 16,
+        "model": "Countries.WorldCountries",
+        "fields": {
+            "country_name": "Czech Republic",
+            "iso_code": "CZ",
+            "region": 2
+        }
+    },
+    {
+        "pk": 17,
+        "model": "Countries.WorldCountries",
+        "fields": {
+            "country_name": "Germany",
+            "iso_code": "DE",
+            "region": 2
+        }
+    },
+    {
+        "pk": 18,
+        "model": "Countries.WorldCountries",
+        "fields": {
+            "country_name": "Denmark",
+            "iso_code": "DK",
+            "region": 2
+        }
+    },
+    {
+        "pk": 19,
+        "model": "Countries.WorldCountries",
+        "fields": {
+            "country_name": "Dominican Republic",
+            "iso_code": "DO",
+            "region": 2
+        }
+    },
+    {
+        "pk": 20,
+        "model": "Countries.WorldCountries",
+        "fields": {
+            "country_name": "Spain",
+            "iso_code": "ES",
+            "region": 2
+        }
+    },
+    {
+        "pk": 21,
+        "model": "Countries.WorldCountries",
+        "fields": {
+            "country_name": "Finland",
+            "iso_code": "FI",
+            "region": 2
+        }
+    },
+    {
+        "pk": 22,
+        "model": "Countries.WorldCountries",
+        "fields": {
+            "country_name": "France",
+            "iso_code": "FR",
+            "region": 2
+        }
+    },
+    {
+        "pk": 23,
+        "model": "Countries.WorldCountries",
+        "fields": {
+            "country_name": "United Kingdom",
+            "iso_code": "GB",
+            "region": 2
+        }
+    },
+    {
+        "pk": 24,
+        "model": "Countries.WorldCountries",
+        "fields": {
+            "country_name": "Greece",
+            "iso_code": "GR",
+            "region": 2
+        }
+    },
+    {
+        "pk": 25,
+        "model": "Countries.WorldCountries",
+        "fields": {
+            "country_name": "Hungary",
+            "iso_code": "HU",
+            "region": 2
+        }
+    },
+    {
+        "pk": 26,
+        "model": "Countries.WorldCountries",
+        "fields": {
+            "country_name": "Ireland",
+            "iso_code": "IE",
+            "region": 2
+        }
+    },
+    {
+        "pk": 27,
+        "model": "Countries.WorldCountries",
+        "fields": {
+            "country_name": "Israel",
+            "iso_code": "IL",
+            "region": 2
+        }
+    },
+    {
+        "pk": 28,
+        "model": "Countries.WorldCountries",
+        "fields": {
+            "country_name": "Iceland",
+            "iso_code": "IS",
+            "region": 2
+        }
+    },
+    {
+        "pk": 29,
+        "model": "Countries.WorldCountries",
+        "fields": {
+            "country_name": "Italy",
+            "iso_code": "IT",
+            "region": 2
+        }
+    },
+    {
+        "pk": 30,
+        "model": "Countries.WorldCountries",
+        "fields": {
+            "country_name": "Kuwait",
+            "iso_code": "KW",
+            "region": 2
+        }
+    },
+    {
+        "pk": 30,
+        "model": "Countries.WorldCountries",
+        "fields": {
+            "country_name": "Netherlands",
+            "iso_code": "NL",
+            "region": 2
+        }
+    },
+    {
+        "pk": 31,
+        "model": "Countries.WorldCountries",
+        "fields": {
+            "country_name": "Norway",
+            "iso_code": "NO",
+            "region": 2
+        }
+    },
+    {
+        "pk": 32,
+        "model": "Countries.WorldCountries",
+        "fields": {
+            "country_name": "Poland",
+            "iso_code": "PL",
+            "region": 2
+        }
+    },
+    {
+        "pk": 33,
+        "model": "Countries.WorldCountries",
+        "fields": {
+            "country_name": "Portugal",
+            "iso_code": "PT",
+            "region": 2
+        }
+    },
+    {
+        "pk": 34,
+        "model": "Countries.WorldCountries",
+        "fields": {
+            "country_name": "Qatar",
+            "iso_code": "QA",
+            "region": 2
+        }
+    },
+    {
+        "pk": 35,
+        "model": "Countries.WorldCountries",
+        "fields": {
+            "country_name": "Romania",
+            "iso_code": "RO",
+            "region": 2
+        }
+    },
+    {
+        "pk": 36,
+        "model": "Countries.WorldCountries",
+        "fields": {
+            "country_name": "Russia",
+            "iso_code": "RU",
+            "region": 2
+        }
+    },
+    {
+        "pk": 37,
+        "model": "Countries.WorldCountries",
+        "fields": {
+            "country_name": "Saudi Arabia",
+            "iso_code": "SA",
+            "region": 2
+        }
+    },
+    {
+        "pk": 38,
+        "model": "Countries.WorldCountries",
+        "fields": {
+            "country_name": "Sweden",
+            "iso_code": "SE",
+            "region": 2
+        }
+    },
+    {
+        "pk": 39,
+        "model": "Countries.WorldCountries",
+        "fields": {
+            "country_name": "Spanish Islands - Canary Islands",
+            "iso_code": "IC",
+            "region": 2
+        }
+    },
+    {
+        "pk": 40,
+        "model": "Countries.WorldCountries",
+        "fields": {
+            "country_name": "Spanish Islands - Balearic Islands",
+            "iso_code": "IB",
+            "region": 2
+        }
+    },
+    {
+        "pk": 41,
+        "model": "Countries.WorldCountries",
+        "fields": {
+            "country_name": "Slovakia",
+            "iso_code": "SK",
+            "region": 2
+        }
+    },
+    {
+        "pk": 42,
+        "model": "Countries.WorldCountries",
+        "fields": {
+            "country_name": "Turkey",
+            "iso_code": "TR",
+            "region": 2
+        }
+    },
+    {
+        "pk": 43,
+        "model": "Countries.WorldCountries",
+        "fields": {
+            "country_name": "Canada",
+            "iso_code": "CA",
+            "region": 1
+        }
+    },
+    {
+        "pk": 44,
+        "model": "Countries.WorldCountries",
+        "fields": {
+            "country_name": "USA",
+            "iso_code": "US",
+            "region": 1
+        }
+    }
+]

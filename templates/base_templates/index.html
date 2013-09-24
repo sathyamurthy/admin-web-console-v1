@@ -1,0 +1,24 @@
+{% extends "base_templates/base_site.html" %}
+{% load i18n admin_static bootstrapped_goodies_tags %}
+
+{% block extrastyle %}{{ block.super }}{% endblock %}
+
+{% block coltype %}colMS{% endblock %}
+
+{% block bodyclass %}dashboard{% endblock %}
+
+
+
+
+{% block content %}
+<div class="row-fluid">
+    <div id="content-main" class="span12">
+
+        <div class="tabbable">
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block sidebar %}
+{% endblock %}

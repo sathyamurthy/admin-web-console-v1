@@ -1,0 +1,16 @@
+{% extends "base_templates/base_site.html" %}
+{% load url from future %}{% load i18n %}
+
+{% block breadcrumbs %}
+{% endblock %}
+
+{% block content %}
+<div class="container row-fluid" >
+  <div class="row well">
+    <div class="span8 offset2">
+
+<p>{% trans "Thanks for spending some quality time with the Web site today." %}</p>
+
+<p><a href="{{ country }}" class="btn">{% trans 'Log in again' %}</a></p>
+</div></div></div>
+{% endblock %}

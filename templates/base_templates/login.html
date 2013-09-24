@@ -1,0 +1,118 @@
+{% extends "base_templates/base_site.html" %}
+{% load i18n admin_static %}
+{% load url from future %}
+{% load replace %}
+{% block nav-global %}{% endblock %}
+
+{% block navbar %}{% endblock %}
+{% block breadcrumbs %}{% endblock %}
+{% block extrastyle %}
+
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+
+
+<div class="container row-fluid " >
+  <div class="row well">
+    <div class="span8 offset2">
+
+<form class="form-signin form-horizontal" action="{{ app_path }}" method="post" id="login-form">{% csrf_token %}
+  <div class="form-signin-inner">
+  {% blocktrans %}<h2>Login</h2>{% endblocktrans %}
+  {% if form.errors and not form.non_field_errors and not form.this_is_the_login_form.errors %}
+    <div class="alert alert-error">
+       {% blocktrans count counter=form.errors.items|length %}Please correct the error below.{% plural %}Please correct the errors below.{% endblocktrans %}
+    </div>
+  {% endif %}
+  {% if form.non_field_errors or form.this_is_the_login_form.errors %}
+    {% for error in form.non_field_errors|add:form.this_is_the_login_form.errors %}
+    <div class="alert alert-error">
+      {{ error }}
+    </div>
+    {% endfor %}
+  {% endif %}
+    
+    {% if form.errors and not form.username.errors and not form.password.errors %}
+    <div class="alert alert-error">
+    	{% replace search="__all__" replacement="* " %}{{ form.errors|striptags  }}{% endreplace %}
+    </div>
+    {% endif %}
+  <div class="control-group">
+    <div class="control-label">
+        <label for="id_username" class="required">{% trans 'Username:' %}</label> 
+    </div>
+    <div class="controls">
+        {{ form.username }}
+        {% if not form.this_is_the_login_form.errors %}<span class="help-inline">{{ form.username.errors|striptags }}</span>{% endif %}
+    </div>
+  </div>
+  <div class="control-group">
+    <div class="control-label">
+        <label for="id_password" class="required">{% trans 'Password:' %}</label> 
+    </div>
+    <div class="controls">
+        {{ form.password }}
+        {% if not form.this_is_the_login_form.errors %}<span class="help-inline">{{ form.password.errors|striptags }}</span>{% endif %}
+    </div>
+    <input type="hidden" name="this_is_the_login_form" value="1" />
+    <input type="hidden" name="next" value="{{ next }}" />
+    <input type="hidden" name="country" value="{{ country }}" />
+  </div>
+  {% if password_reset_url %}
+  <div class="control-group">
+    <div class="controls">
+        <a href="{{ password_reset_url }}">{% trans 'Forgotten your password or username?' %}</a>
+    </div>
+  </div>
+  {% endif %}
+  </div>
+	<div id="change_country" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-header">
+	    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	    <h3 id="myModalLabel">Change country</h3>
+	  </div>
+	  <div class="modal-body" style="overflow-y: auto">
+        	  <div class="control-group">
+			    <div class="control-label">
+			        <label for="country" class="required">Country :</label> 
+			    </div>
+			    <div class="controls">
+			    	<select id="country">
+			    	{% for country in countries %}
+			    	 <option value="/{{country.iso_code}}/">{{country.country_name}}</option>
+			    	{% endfor%}
+			    	</select>
+			    	<script language="JavaScript">
+						$( "#country" ).change(function() {
+							document.location.href = $( "#country option:selected" ).val()
+						});	
+						
+					</script>
+			    </div>
+			  </div>
+
+
+
+	  </div>
+	  <div class="modal-footer">
+	    <button class="btn btn-primary" data-dismiss="modal">Close</button>
+	  </div>
+	</div>	
+  <div class="form-actions">
+  	<div class="pull-right">
+  	<a class="btn btn-primary " id="change_country" data-toggle="modal" href="#change_country" role="button" data-controls-modal="change_country" role="button" data-backdrop="static" data-keyboard="false" >Change country</a>
+    <input type="submit" value="{% trans 'Log in' %}" class="btn btn-primary" />
+    </div>
+  </div>
+  
+</form>
+</div></div></div>
+<script type="text/javascript">
+$(document).ready(function() {
+  $('#id_username').attr('autocapitalize', 'off').focus();
+})
+</script>
+</div>
+{% endblock %}
